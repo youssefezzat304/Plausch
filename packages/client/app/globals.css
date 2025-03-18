@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+:root {
+  /* Primary Colors */
+  --primary: rgb(77, 80, 245);
+  --primary-soft: rgb(159, 151, 228);
+  --primary-hard: rgb(118, 120, 237);
+  --primary-xhard: rgb(60, 24, 189);
+  --primary-dark: rgb(32, 32, 34);
+
+  /* Secondary Colors */
+  --secondary-soft: rgb(199, 195, 252);
+
+  /* Input Colors */
+  --input-color: rgba(210, 205, 255, 0.8);
+
+  /* Button Colors */
+  --Dark-theme-Btn: rgb(46, 51, 74);
+  --remove-Btn: rgb(212, 65, 65);
+
+  /* Status Colors */
+  --log-out: rgb(242, 92, 84);
+  --error-soft: rgb(239, 118, 116);
+  --error-strong: rgb(233, 82, 82);
+  --error-dark: rgb(144, 41, 35);
+  --warning-soft: rgb(239, 220, 116);
+  --warning-hard: rgb(138, 103, 9);
+  --done-soft: rgb(70, 218, 102);
+  --done-md: rgb(32, 182, 64);
+  --done-heavy: rgb(12, 73, 26);
+
+  /* Neutral Colors */
+  --text-gray: rgb(108, 117, 125);
+  --white: rgb(249, 250, 252);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer components {
+  .authInput {
+    @apply w-full h-12 rounded-[26px] border-none pl-4 pr-2.5 bg-[var(--input-color)] placeholder:text-[rgb(134,134,134)];
+  }
+}
