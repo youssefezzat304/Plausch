@@ -18,7 +18,7 @@ export function errorHandler(
 
   return res.status(HttpStatusCode.INTERNAL_SERVER).json({
     title: ErrorTitle.ERROR,
-    status: HttpStatusCode.INTERNAL_SERVER,
+    httpCode: HttpStatusCode.INTERNAL_SERVER,
     message: "Something went wrong. Please try again later.",
   });
 }

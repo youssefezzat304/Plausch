@@ -1,3 +1,4 @@
+import { config } from "dotenv";
 import express, { Application, Router } from "express";
 import http from "http";
 // import { Server, Socket } from "socket.io";
@@ -8,37 +9,34 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 // import { errorHandler } from "../middlewares/errorHandler.middleware";
-import { config } from "dotenv";
 // import { SocketHandler } from "../types/interface";
 // import messageSocketHandler from "../routes/message/message.socket";
 import path from "path";
+import { errorHandler } from "./middleswares/errorHandler.middleware";
+import { Server, Socket } from "socket.io";
+import initializeSockets from "./utils/sockets";
 
-config({ path: path.resolve(__dirname, "config/.env") });
+config();
 
 const corsOptions = {
-  origin: "http://localhost:8080",
+  origin: "http://localhost:3001",
   credentials: true,
   methods: "GET,POST,PUT,DELETE,PATCH",
 };
 
-const onlineUsers: { [userId: string]: string } = {};
-
 const app: Application = express();
-const port = Number(process.env.PORT) || 3000;
+const port = 8080;
 const server = http.createServer(app);
-// const io = new Server(server, {
-//   cors: corsOptions,
-// });
-
-// const messagesSocketHandler = messageSocketHandler(io);
-// const socketHandlers = [messagesSocketHandler];
+const io = new Server(server, {
+  cors: corsOptions,
+});
 
 const initialiseMiddleware = (): void => {
   app.use(cors(corsOptions));
   app.use(express.json());
   app.use(cookieParser());
   app.use(helmet());
-  // app.use(compression());
+  app.use(compression());
   app.use(morgan("dev"));
   app.use(
     "/avatars",
@@ -60,36 +58,9 @@ const initialiseDatabaseConnection = (): void => {
     });
 };
 
-// const initializeSocketConnection = (
-//   io: Server,
-//   handlers: SocketHandler[],
-// ): void => {
-//   io.on("connection", (socket: Socket) => {
-//     console.log("A user connected:", socket.id);
-
-//     socket.on("userOnline", (userId: string) => {
-//       onlineUsers[userId] = socket.id;
-//       console.log(`User ${userId} is online.`, onlineUsers);
-//       io.emit("updateOnlineStatus", onlineUsers);
-//     });
-
-//     handlers.forEach((handler) => {
-//       handler.registerEvents(socket);
-//     });
-
-//     socket.on("disconnect", () => {
-//       console.log("User disconnected:", socket.id);
-//       for (const [userId, id] of Object.entries(onlineUsers)) {
-//         if (id === socket.id) {
-//           delete onlineUsers[userId];
-//           console.log(`User ${userId} is offline.`, onlineUsers);
-//           io.emit("updateOnlineStatus", onlineUsers);
-//           break;
-//         }
-//       }
-//     });
-//   });
-// };
+const initializeSocketConnection = (io: Server): void => {
+  initializeSockets(io);
+};
 
 const initialiseControllers = (controllers: Router[]): void => {
   controllers.forEach((controller: Router) => {
@@ -97,9 +68,9 @@ const initialiseControllers = (controllers: Router[]): void => {
   });
 };
 
-// const initialiseErrorHandler = (): void => {
-//   app.use(errorHandler);
-// };
+const initialiseErrorHandler = (): void => {
+  app.use(errorHandler);
+};
 
 const listen = (): void => {
   server.listen(port, () => {
@@ -111,8 +82,8 @@ const initializeApp = (controllers: Router[]): void => {
   initialiseMiddleware();
   initialiseDatabaseConnection();
   initialiseControllers(controllers);
-  // initializeSocketConnection(io, socketHandlers);
-  // initialiseErrorHandler();
+  initializeSocketConnection(io);
+  initialiseErrorHandler();
 };
 
 export {
@@ -121,9 +92,9 @@ export {
   // io,
   initialiseMiddleware,
   initialiseDatabaseConnection,
-  // initializeSocketConnection,
+  initializeSocketConnection,
   initialiseControllers,
-  // initialiseErrorHandler,
+  initialiseErrorHandler,
   listen,
   initializeApp,
 };

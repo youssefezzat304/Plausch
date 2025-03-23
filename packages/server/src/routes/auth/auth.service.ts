@@ -17,17 +17,17 @@ import {
 import { ZodError } from "zod";
 import { ErrorMessage } from "@shared/exceptions/exceptions";
 import {
-  logInInputType,
-  logInSchema,
-  registerInputType,
-  registerSchema,
+  loginInputType,
+  loginSchema,
+  signupInputType,
+  signupSchema,
 } from "@shared/schemas/auth.schema";
 import { UserDocument, UserModel } from "@/routes/users/users.model";
 
 class AuthService {
-  public async checkForCredentials(input: logInInputType) {
+  public async checkForCredentials(input: loginInputType) {
     try {
-      const { email, password } = logInSchema.parse(input);
+      const { email, password } = loginSchema.parse(input);
 
       const user = await UserModel.findOne({ email });
       if (!user) throw new NotFoundError(ErrorMessage.WRONG_CRED);
@@ -49,9 +49,9 @@ class AuthService {
     }
   }
 
-  public async register(input: registerInputType) {
+  public async register(input: signupInputType) {
     try {
-      const { email } = registerSchema.parse(input);
+      const { email } = signupSchema.parse(input);
 
       const existingUser = await UserModel.findOne({ email: email });
       if (existingUser) {
@@ -61,7 +61,7 @@ class AuthService {
       const user = (await UserModel.create(
         input,
       )) as DocumentType<UserDocument>;
-      user.profilePicture = chooseRandomAvatar();
+      // user.profilePicture = chooseRandomAvatar();
 
       const tokens = this.generateTokens(user);
 
@@ -83,12 +83,10 @@ class AuthService {
 
   public async getUser(userId: Types.ObjectId | string) {
     try {
-      const user = (await UserModel.findById(userId)
-        .populate("friendRequests.incoming")
-        .populate("friends")
-        .exec()) as DocumentType<UserDocument> | null;
+      const user = (await UserModel.findById(
+        userId,
+      )) as DocumentType<UserDocument> | null;
 
-      console.log(user?._id);
       if (!user) {
         throw new NotFoundError("User not found.");
       }
@@ -136,13 +134,17 @@ class AuthService {
     res: Response,
     tokens: { accessToken: string; refreshToken: string },
   ) {
-    res.cookie("refreshToken", `Bearer ${tokens.refreshToken}`, {
+    res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
+      secure: true,
+      sameSite: "strict",
       maxAge: constants.REFRESH_TOKEN_TIMEOUT,
     });
 
     res.cookie("accessToken", tokens.accessToken, {
       httpOnly: true,
+      secure: true,
+      sameSite: "strict",
       maxAge: constants.ACCESS_TOKEN_TIMEOUT,
     });
   }

@@ -1,4 +1,4 @@
-import { UseFormRegister, FieldError } from "react-hook-form";
+import { UseFormRegister } from "react-hook-form";
 
 type InputProps = {
   label?: string;
@@ -6,7 +6,7 @@ type InputProps = {
   placeholder: string;
   className?: string;
   register: UseFormRegister<any>;
-  error?: FieldError;
+  error?: string | undefined;
   type?:
     | "text"
     | "password"
@@ -39,15 +39,21 @@ const Input = ({
 }: InputProps) => {
   return (
     <>
-      {label && <label htmlFor={name}>{label}</label>}
-      <input
-        id={name}
-        type={type}
-        placeholder={placeholder}
-        {...register(name)}
-        className={className}
-      />
-      {error && <span className="text-red-500 text-sm">{error.message}</span>}
+      <div className="flex flex-col">
+        {label && (
+          <label htmlFor={name} className="text-sm text-gray-500">
+            {label}
+          </label>
+        )}
+        <input
+          id={name}
+          type={type}
+          placeholder={placeholder}
+          {...register(name)}
+          className={className}
+        />
+        <p className="text-sm h-1 text-red-500 my-0.5">{error || " "}</p>
+      </div>
     </>
   );
 };

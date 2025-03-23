@@ -19,5 +19,5 @@ export enum ErrorMessage {
   WRONG_CRED = "Wrong email or password.",
   EMAIL_USED = "This email is already in use.",
   PASSWORD_MISMATCH = "Passwords do not match.",
-  ACC_TOKEN = "Access token required.",
+  ACC_TOKEN = "Something went wrong, please refresh the page and try again.",
 }

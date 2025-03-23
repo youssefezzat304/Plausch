@@ -6,7 +6,7 @@ function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="relative h-screen flex flex-col items-center justify-center">
+    <main className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
       <div className="absolute text-primary-dark w-[58rem] h-[38rem] bg-white rounded-lg flex z-20">
         {children}
       </div>

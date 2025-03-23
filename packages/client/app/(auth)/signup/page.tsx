@@ -7,14 +7,8 @@ import { useRouter } from "next/navigation";
 
 function signup() {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    errors,
-    isSubmitting,
-    onSubmit,
-    clearAllErrors,
-  } = useSignUpForm();
+  const { register, handleSubmit, errors, onSubmit, shouldShowError } =
+    useSignUpForm();
 
   return (
     <>
@@ -23,42 +17,57 @@ function signup() {
       </div>
       <div className="w-1/2 h-full flex items-center justify-center">
         <FormWrapper
-          className="w-[28rem] h-[36rem] flex flex-col justify-center pr-9 gap-5"
           onSubmit={handleSubmit(onSubmit)}
+          className="w-[28rem] h-[36rem] flex flex-col justify-center pr-9 gap-4"
         >
           <h1 className="font-semibold">
-            Hello,<br></br> Nice to meet you
+            Hello,
+            <br /> Nice to meet you
           </h1>
           <Input
-            name="Display name"
+            name="displayName"
             type="text"
             placeholder="Display name."
             register={register}
+            error={
+              shouldShowError("displayName")
+                ? errors.displayName?.message
+                : undefined
+            }
             className="authInput"
           />
           <Input
-            register={register}
-            type="email"
             name="email"
+            type="text"
             placeholder="Enter your E-mail."
+            register={register}
+            error={shouldShowError("email") ? errors.email?.message : undefined}
             className="authInput"
           />
           <Input
-            register={register}
+            name="password"
             type="password"
-            name="Password"
             placeholder="Enter your Password."
+            register={register}
+            error={
+              shouldShowError("password") ? errors.password?.message : undefined
+            }
             className="authInput"
           />
           <Input
-            register={register}
-            type="password"
             name="confirmPassword"
-            placeholder="Confrim your password"
+            type="password"
+            placeholder="Confirm your password"
+            register={register}
+            error={
+              shouldShowError("confirmPassword")
+                ? errors.confirmPassword?.message
+                : undefined
+            }
             className="authInput"
           />
           <input
-            className="w-full h-12 rounded-[26px] border-none pl-4 pr-2.5 cursor-pointer font-semibold text-lg bg-gray-300"
+            className="w-full h-12 rounded-[26px] border-none pl-4 pr-2.5 cursor-pointer text-white bg-[var(--Dark-theme-Btn)] font-semibold text-lg"
             title="Confirm sign-up"
             type="submit"
             name="signUp"

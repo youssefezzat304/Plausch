@@ -25,6 +25,6 @@
     }
   },
   "references": [{ "path": "../shared" }],
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "config/custom-env-var.ts", "config/default.ts"],
   "exclude": ["node_modules", "dist"]
 }

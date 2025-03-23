@@ -17,10 +17,12 @@ export function signJwt(
     "base64",
   ).toString("ascii");
 
-  return jwt.sign(object, signingKey, {
+  const jwtToken = jwt.sign(object, signingKey, {
     ...(options && options),
     algorithm: "RS256",
   });
+
+  return jwtToken;
 }
 
 export function verifyJwt<T>(

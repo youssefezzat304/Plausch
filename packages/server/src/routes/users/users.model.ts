@@ -31,24 +31,20 @@ export class UserDocument {
   @prop({ required: true })
   password!: string;
 
-  @prop({ default: "" })
+  @prop({ default: "https://github.com/shadcn.png" })
   public profilePicture?: string;
 
   @prop({ ref: "UserDocument", default: [] })
   public friends!: Ref<UserDocument>[];
 
-  // @prop({
-  //   type: () => FriendRequests,
-  //   _id: false,
-  //   default: () => ({}),
-  // })
-  // public friendRequests!: FriendRequests;
+  @prop({ ref: "UserDocument", default: [] })
+  public friendRequests!: Ref<UserDocument>[];
 
-  // @prop({ ref: () => PrivateChat, default: [] })
-  // public chats: Ref<PrivateChat>[];
+  @prop({ ref: "UserDocument", default: [] })
+  public sentRequests!: Ref<UserDocument>[];
 
-  // @prop({ ref: () => GroupChat, default: [] })
-  // public groupChats: Ref<GroupChat>[];
+  @prop({ ref: "UserDocument", default: [] })
+  public contacts!: Ref<UserDocument>[];
 
   @prop({ default: "" })
   public birthDate!: string;
@@ -71,6 +67,7 @@ export class UserDocument {
     city: string;
     postalCode: string;
   };
+
   async validatePassword(
     this: DocumentType<UserDocument>,
     candidatePassword: string,
