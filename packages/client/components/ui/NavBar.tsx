@@ -9,9 +9,12 @@ import ButtonIcon from "../buttons/ButtonIcon";
 import { Avatar } from "./shadcn/avatar";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import AddFriendDialog from "../dialogs/AddFriendDialog";
+import useLogOut from "@/hooks/useLogOut";
 
 const NavBar = () => {
   const setTab = useTabsStore((state) => state.setTab);
+  const { handleLogOut } = useLogOut();
+
   return (
     <div className="fixed left-4 h-screen w-14 flex flex-col justify-center items-center bg-[var(--primary-dark)]">
       <Link href={"/profile"} className="cursor-pointer absolute top-5">
@@ -69,6 +72,7 @@ const NavBar = () => {
           side="right"
           tooltip="Log out"
           icon={<RiLogoutCircleLine className="text-2xl text-red-500" />}
+          onClick={handleLogOut}
           className="flex flex-col items-center gap-2 p-2 hover:text-red-500 transition-colors"
         />
       </div>

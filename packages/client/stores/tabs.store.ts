@@ -3,14 +3,14 @@ import { create } from "zustand";
 type TabName =
   | "notifications"
   | "friendRequests"
-  | "friends"
+  | "chats"
   | "contacts"
   | "chatInfo";
 
 type TabsStore = {
   isNotificationsOpen: boolean;
   isFriendRequestsOpen: boolean;
-  isFriendsOpen: boolean;
+  isChatsOpen: boolean;
   isContactsOpen: boolean;
   isChatInfoOpen: boolean;
 
@@ -20,15 +20,15 @@ type TabsStore = {
 const useTabsStore = create<TabsStore>((set) => ({
   isNotificationsOpen: false,
   isFriendRequestsOpen: false,
-  isFriendsOpen: true,
+  isChatsOpen: true,
   isContactsOpen: false,
   isChatInfoOpen: false,
 
   setTab: (tab, state) =>
     set((prev) => {
-      if (tab === "friends") {
+      if (tab === "chats") {
         return {
-          isFriendsOpen: state !== undefined ? state : !prev.isFriendsOpen,
+          isChatsOpen: state !== undefined ? state : !prev.isChatsOpen,
           isContactsOpen: state !== undefined ? !state : false,
         };
       }
@@ -36,7 +36,7 @@ const useTabsStore = create<TabsStore>((set) => ({
       if (tab === "contacts") {
         return {
           isContactsOpen: state !== undefined ? state : !prev.isContactsOpen,
-          isFriendsOpen: state !== undefined ? !state : false,
+          isChatsOpen: state !== undefined ? !state : false,
         };
       }
 

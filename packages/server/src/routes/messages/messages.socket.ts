@@ -1,7 +1,10 @@
-import { Socket } from "socket.io";
+import { Server } from "socket.io";
 import MessagesService from "../messages/messages.service";
+import { Content } from "./messages.model";
+import { UserSocket } from "@/types/socket.io";
 
-export default function messageSocketHandler(socket: Socket, userId: string) {
+export default function messageSocketHandler(io: Server, socket: UserSocket) {
+  const userId = socket.userId;
   const messagesService = new MessagesService();
 
   socket.on("joinConversation", (conversationId: string) => {
@@ -11,16 +14,23 @@ export default function messageSocketHandler(socket: Socket, userId: string) {
 
   socket.on(
     "sendMessage",
-    async (data: { conversationId: string; content: any }) => {
+    async (data: {
+      conversationId: string;
+      content: Content;
+      senderId: string;
+      recipientId: string;
+    }) => {
       try {
+        const { conversationId, content, senderId, recipientId } = data;
+
         const message = await messagesService.sendMessage(
-          userId,
-          data.conversationId,
-          data.content,
+          senderId,
+          conversationId,
+          content,
+          recipientId,
         );
 
-        // Broadcast to conversation room
-        socket.to(data.conversationId).emit("newMessage", message);
+        io.to(conversationId).emit("newMessage", message);
       } catch (error) {
         socket.emit("error", { message: "Failed to send message" });
       }

@@ -17,7 +17,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"],
@@ -25,6 +25,15 @@
     }
   },
   "references": [{ "path": "../shared" }],
-  "include": ["src/**/*.ts", "config/custom-env-var.ts", "config/default.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "types/**/*.d.ts",
+    "src/**/*.ts",
+    "config/custom-env-var.ts",
+    "config/default.ts",
+    "src/routes/users/users.model.ts",
+    "src/types/socket.io.d.ts"
+  ],
+  "exclude": ["node_modules", "dist"],
+  "typeRoots": ["./node_modules/@types", "./src/types"],
+  "types": ["socket.io"]
 }

@@ -4,11 +4,20 @@ import {
   modelOptions,
   Severity,
   Ref,
+  pre,
+  index,
 } from "@typegoose/typegoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
-import { UserDocument } from "../users/users.model";
 import { MessageDocument, MessageModel } from "../messages/messages.model";
+import { UserDocument } from "../users/users.model";
 
+
+@pre<ChatDocument>("save", function () {
+  this.participants.sort((a, b) => a.toString().localeCompare(b.toString()));
+})
+@index({ "participants.0": 1, "participants.1": 1 }, { unique: true })
+@index({ lastActive: -1 })
+@index({ lastMessage: 1 })
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class ChatDocument extends TimeStamps {
   @prop({
@@ -27,10 +36,11 @@ export class ChatDocument extends TimeStamps {
     required: true,
     unique: true,
     index: true,
+    _id: true,
   })
   public conversationId!: string;
 
-  @prop({ ref: () => MessageDocument })
+  @prop({ ref: () => MessageDocument, default: null })
   public lastMessage?: Ref<MessageDocument>;
 
   @prop({ default: Date.now })

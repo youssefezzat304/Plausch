@@ -1,54 +1,47 @@
 "use client";
-import { useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { useUserStore } from "@/stores/user.store";
-import { useQuery } from "@tanstack/react-query";
-import { fetchUser } from "@/api/auth";
-import { Progress } from "../ui/shadcn/progress";
 
-const publicRoutes = ["/login", "/signup"];
+import { useSession } from "next-auth/react";
+import { useRouter, usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useUserStore } from "@/stores/user.store";
+import { IUser } from "@shared/types/user.types";
+import Loading from "@/app/Loading";
 
 interface AuthGuardProps {
   children: React.ReactNode;
 }
 
 export default function AuthGuard({ children }: AuthGuardProps) {
-  const { user, setUser } = useUserStore();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
-
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["validateUser"],
-    queryFn: fetchUser,
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
+  const [isClient, setIsClient] = useState(false);
+  const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
-    if (data) {
-      setUser(data);
-      if (publicRoutes.includes(pathname)) {
-        router.replace("/chat");
+    setIsClient(true);
+
+    if (status === "loading") return;
+
+    if (status === "authenticated") {
+      const user = session?.user as IUser;
+      setUser(user);
+
+      if (pathname === "/login" || pathname === "/signup") {
+        router.push("/chat");
       }
     }
-  }, [data, pathname, router, setUser]);
 
-  useEffect(() => {
-    if (error && !publicRoutes.includes(pathname)) {
-      router.replace("/login");
+    if (
+      status === "unauthenticated" &&
+      !["/login", "/signup"].includes(pathname)
+    ) {
+      router.push("/login");
     }
-  }, [error, pathname, router]);
+  }, [status, session, router, pathname, setUser]);
 
-  if (isLoading) {
-    return (
-      <div className="h-screen w-screen flex items-center justify-center">
-        <Progress />
-      </div>
-    );
-  }
-
-  if (!user && !publicRoutes.includes(pathname)) {
-    return null;
+  if (!isClient || status === "loading") {
+    return <Loading />;
   }
 
   return <>{children}</>;

@@ -1,27 +1,8 @@
-export interface User {
-  _id: string;
-  displayName: string;
-  email: string;
-  profilePicture?: string;
-  friends: string[];
-  friendRequests: string[];
-  sentRequests: string[];
-  contacts: string[];
-  birthDate?: string;
-  onlineStatus?: boolean;
-  lastSeen?: Date;
-  phoneNumber?: string;
-  bio?: string;
-  address?: {
-    country: string;
-    city: string;
-    postalCode: string;
-  };
-}
+import { IUser } from "@shared/types/user.types";
 
 export interface Message {
   _id: string;
-  senderId: string;
+  sender: IUser;
   conversationId: string;
   content: {
     type: "text" | "image";
@@ -38,8 +19,18 @@ export interface Message {
 }
 
 export interface Chat {
+  _id: string;
   conversationId: string;
-  participants: User[];
+  participants: IUser[];
   lastMessage?: Message;
   lastActive: string;
 }
+
+export type FriendRequest = {
+  _id: string;
+  sender: IUser;
+  recipient: IUser;
+  status: "pending" | "accepted" | "rejected";
+  createdAt: Date;
+  updatedAt?: Date;
+};

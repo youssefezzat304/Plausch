@@ -1,8 +1,4 @@
-import {
-  ErrorTitle,
-  ErrorMessage,
-  HttpStatusCode,
-} from "@shared/exceptions/exceptions";
+import { ErrorTitle, ErrorMessage, HttpStatusCode } from "@shared/exceptions";
 
 export class ClientError extends Error {
   public readonly title: ErrorTitle | string;

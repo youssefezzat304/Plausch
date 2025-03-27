@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { UserInputType, userSchema } from "@shared/schemas/user.schema";
 import { useMutation } from "@tanstack/react-query";
 import { users } from "@/api/users";
-import { User } from "@/types";
+import { IUser } from "@shared/types/user.types";
 import { useUserStore } from "@/stores/user.store";
 import { AxiosError } from "axios";
 import { ClientError } from "@/utils/errors";
@@ -43,14 +43,14 @@ export const useProfileForm = () => {
 
   const updateProfileMutation = useMutation({
     mutationFn: async (updatedData: UserInputType) => {
-      const response = await users.patch<User>(`/${userId}`, updatedData);
+      const response = await users.patch<IUser>(`/${userId}`, updatedData);
       localStorage.setItem("me", JSON.stringify(response.data));
       setUser(response.data);
       return response;
     },
     onSuccess: () => {
       toast.success("Profile has been updated.");
-      router.replace("/profile");
+      router.push("/profile");
     },
     onError: (error: AxiosError<ClientError>) => {
       if (error.response?.data.httpCode === 401) {

@@ -1,39 +1,30 @@
-import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { api } from "@/api/api";
 import { useUserStore } from "@/stores/user.store";
 import useTabsStore from "@/stores/tabs.store";
 import SearchBar from "../ui/SearchBar";
+import ContactListItem from "./ContactListItem";
 import ChatListItem from "./ChatListItem";
+import useGetContacts from "@/hooks/useGetContacts";
+import { getChats } from "@/api/api";
+import { IUser } from "@shared/types/user.types";
 import { Chat } from "@/types";
 
 const ChatList = () => {
+  const { isChatsOpen, isContactsOpen } = useTabsStore();
   const currentUser = useUserStore((state) => state.user);
-  const { isFriendsOpen, isContactsOpen, setTab } = useTabsStore(); // Changed from isChatsOpen
 
-  // Fetch friends data only when friends tab is open
-  const { data: friends, isLoading: friendsLoading } = useQuery({
-    queryKey: ["friends", currentUser?._id],
-    queryFn: async () => {
-      const response = await api.get(`${currentUser!._id}/friends`);
-      return response.data;
-    },
-    enabled: !!currentUser && isFriendsOpen,
+  const { data: chats, isLoading: chatsLoading } = useQuery({
+    queryKey: ["chats", currentUser?._id],
+    queryFn: () => getChats(currentUser?._id!),
+    enabled: !!currentUser && isChatsOpen,
   });
 
-  // Fetch contacts data only when contacts tab is open
-  const { data: contacts, isLoading: contactsLoading } = useQuery({
-    queryKey: ["contacts", currentUser?._id], // Changed from chats
-    queryFn: async () => {
-      const response = await api.get(`${currentUser!._id}/contacts`);
-      return response.data;
-    },
-    enabled: !!currentUser && isContactsOpen,
-  });
+  const { data: contacts, isLoading: contactsLoading } =
+    useGetContacts(isContactsOpen);
 
-  const isLoading = isFriendsOpen ? friendsLoading : contactsLoading;
-  const activeData = isFriendsOpen ? friends : contacts;
-  const activeTabName = isFriendsOpen ? "friends" : "contacts"; // Changed from chats
+  const isLoading = isChatsOpen ? chatsLoading : contactsLoading;
+  const activeData = isChatsOpen ? chats : contacts;
+  const activeTabName = isChatsOpen ? "chats" : "contacts";
 
   return (
     <div className="will-change-transform overflow-x-hidden rounded-bl-[22px] w-full max-w-full overflow-y-auto listShadow">
@@ -46,15 +37,16 @@ const ChatList = () => {
           </div>
         ) : (
           <>
-            {activeData?.length > 0 ? (
-              activeData.map((item: Chat) => (
-                <Link
-                  key={item.conversationId}
-                  href={`/${activeTabName}/${item.conversationId}`}
-                >
-                  <ChatListItem chat={item} />
-                </Link>
-              ))
+            {activeData && activeData.length > 0 ? (
+              isChatsOpen ? (
+                (activeData as Chat[]).map((chat) => (
+                  <ChatListItem key={chat._id} chat={chat} />
+                ))
+              ) : (
+                (activeData as IUser[]).map((user) => (
+                  <ContactListItem key={user._id} user={user} />
+                ))
+              )
             ) : (
               <div className="flex justify-center items-center h-32 text-gray-500">
                 No {activeTabName} found

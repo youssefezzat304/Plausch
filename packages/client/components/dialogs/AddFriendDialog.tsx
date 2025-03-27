@@ -18,11 +18,11 @@ import { useMutation } from "@tanstack/react-query";
 import { api } from "@/api/api";
 import { useUserStore } from "@/stores/user.store";
 import { toast } from "sonner";
-import FormWrapper from "../forms/FormWrapper";
+import { IUser } from "@shared/types/user.types";
 
 const AddFriendDialog = () => {
   const currentUser = useUserStore((state) => state.user);
-
+  const setUser = useUserStore((state) => state.setUser);
   const {
     register,
     handleSubmit,
@@ -38,33 +38,41 @@ const AddFriendDialog = () => {
 
   const addFriendMutation = useMutation({
     mutationFn: async (email: string) => {
-      const response = await api.post(`/${currentUser?._id}/add/${email}`, {
-        email,
-      });
+      try {
+        const response = await api.post<IUser>(
+          `/${currentUser?._id}/add/${email}`,
+        );
+        setUser(response.data);
+        return response.data;
+      } catch (error: any) {
+        throw new Error(
+          error.response?.data?.message || "Failed to add friend",
+        );
+      }
     },
     onSuccess: () => {
-      toast.success("Friend added successfully");
+      toast.success("Friend request sent successfully");
     },
-    onError: () => {
-      toast.error("Failed to add friend");
+    onError: (error: Error) => {
+      toast.error(error.message || "An unknown error occurred");
     },
   });
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = (data: { email: string }) => {
     addFriendMutation.mutate(data.email);
-  });
+  };
 
   return (
-    <FormWrapper onSubmit={onSubmit}>
-      <Dialog>
-        <DialogTrigger asChild>
-          <ButtonIcon
-            side="right"
-            tooltip="Add friend"
-            icon={<IoPersonAdd className="text-2xl" />}
-          />
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+    <Dialog>
+      <DialogTrigger asChild>
+        <ButtonIcon
+          side="right"
+          tooltip="Add friend"
+          icon={<IoPersonAdd className="text-2xl" />}
+        />
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>ADD FRIEND</DialogTitle>
             <DialogDescription>
@@ -73,9 +81,9 @@ const AddFriendDialog = () => {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <Input
+              name="email"
               error={errors.email?.message}
               className="p-3 border-2 rounded-xl"
-              {...register("email")}
               placeholder="Enter email address"
               register={register}
             />
@@ -85,9 +93,9 @@ const AddFriendDialog = () => {
               Add Friend
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </FormWrapper>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 

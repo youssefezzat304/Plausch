@@ -1,8 +1,4 @@
-import {
-  ErrorMessage,
-  ErrorTitle,
-  HttpStatusCode,
-} from "@shared/exceptions/exceptions";
+import { ErrorMessage, ErrorTitle, HttpStatusCode } from "@shared/exceptions";
 
 export abstract class BaseError extends Error {
   public readonly title: ErrorTitle | string;

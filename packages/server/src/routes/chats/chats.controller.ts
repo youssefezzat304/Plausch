@@ -1,6 +1,5 @@
-import authenticateUser from "@/middleswares/authenticateUser.middleware";
 import { Request, Response, NextFunction, Router } from "express";
-import { ChatsService } from "./chats.service";
+import ChatsService from "./chats.service";
 
 const chatsController: Router = Router();
 const chatsService = new ChatsService();

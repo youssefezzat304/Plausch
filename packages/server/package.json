@@ -16,6 +16,7 @@
     "bcryptjs": "^3.0.2",
     "compression": "^1.7.4",
     "config": "^3.3.12",
+    "cookie": "^1.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
@@ -23,9 +24,11 @@
     "express": "^4.21.2",
     "express-async-error": "^0.0.2",
     "helmet": "^8.1.0",
+    "jose": "^6.0.10",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1",
     "morgan": "^1.10.0",
+    "next-auth": "^4.24.11",
     "socket.io": "^4.8.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
@@ -40,6 +43,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20",
+    "@types/socket.io": "^3.0.2",
     "nodemon": "^3.1.9"
   }
 }

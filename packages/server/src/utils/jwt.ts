@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import config from "config";
 import { DocumentType } from "@typegoose/typegoose";
 import { InternalServerError } from "@/utils/exception";
-import { ErrorMessage } from "@shared/exceptions/exceptions";
+import { ErrorMessage } from "@shared/exceptions";
 
 type privateKeyNames = "accessTokenPrivateKey" | "refreshTokenPrivateKey";
 type publicKeyNames = "accessTokenPublicKey" | "refreshTokenPublicKey";

@@ -1,13 +1,13 @@
 import { UserInputType, userSchema } from "@shared/schemas/user.schema";
 import { Types } from "mongoose";
-import { UserModel } from "./users.model";
 import {
   AuthError,
   BaseError,
   InternalServerError,
   NotFoundError,
 } from "@/utils/exception";
-import { ErrorMessage } from "@shared/index";
+import { ErrorMessage } from "@shared/exceptions";
+import { UserModel } from "./users.model";
 
 class UserService {
   public async updateUserInfo(
@@ -47,6 +47,37 @@ class UserService {
       if (!updatedUser) throw new NotFoundError(ErrorMessage.GENERIC_ERROR);
 
       return updatedUser;
+    } catch (error) {
+      if (error instanceof BaseError) throw error;
+      throw new InternalServerError(ErrorMessage.GENERIC_ERROR);
+    }
+  }
+
+  public async setOnlineStatus(
+    userId: Types.ObjectId | string,
+    status: boolean,
+  ) {
+    try {
+      const user = await UserModel.findByIdAndUpdate(
+        userId,
+        { onlineStatus: status },
+        { new: true },
+      );
+
+      if (!user) throw new NotFoundError(ErrorMessage.GENERIC_ERROR);
+
+      return user;
+    } catch (error) {
+      if (error instanceof BaseError) throw error;
+      throw new InternalServerError(ErrorMessage.GENERIC_ERROR);
+    }
+  }
+
+  public async getUser(userId: Types.ObjectId | string) {
+    try {
+      const user = await UserModel.findById(userId);
+      if (!user) throw new NotFoundError(ErrorMessage.GENERIC_ERROR);
+      return user;
     } catch (error) {
       if (error instanceof BaseError) throw error;
       throw new InternalServerError(ErrorMessage.GENERIC_ERROR);

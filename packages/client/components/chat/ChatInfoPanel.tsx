@@ -3,7 +3,6 @@ import { TbPhotoSquareRounded } from "react-icons/tb";
 import { LuFiles, LuMusic4 } from "react-icons/lu";
 import { HiOutlineVideoCamera } from "react-icons/hi";
 import { GrMicrophone } from "react-icons/gr";
-import Image from "next/image";
 import {
   Accordion,
   AccordionContent,
@@ -13,9 +12,12 @@ import {
 import useTabsStore from "@/stores/tabs.store";
 import ButtonIcon from "../buttons/ButtonIcon";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import useChatStore from "@/stores/chat.store";
 
 const ChatInfoPanel = () => {
   const setTab = useTabsStore((state) => state.setTab);
+  const currentChatUser = useChatStore((state) => state.currentChatUser);
+
   return (
     <div className="w-full h-full bg-white rounded-2xl p-4">
       <div className="flex justify-between items-center border-b pb-2">
@@ -37,7 +39,9 @@ const ChatInfoPanel = () => {
           />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
-        <span className="text-lg font-medium mt-2">User Name</span>
+        <span className="text-lg font-medium mt-2">
+          {currentChatUser?.displayName}
+        </span>
       </div>
 
       <Accordion type="single" collapsible className="space-y-0 divide-y-0">

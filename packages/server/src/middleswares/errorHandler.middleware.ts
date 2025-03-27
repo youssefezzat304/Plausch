@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { BaseError } from "@/utils/exception";
-import { ErrorTitle, HttpStatusCode } from "@shared/exceptions/exceptions";
+import { ErrorTitle, HttpStatusCode } from "@shared/exceptions";
 
 export function errorHandler(
   error: unknown,

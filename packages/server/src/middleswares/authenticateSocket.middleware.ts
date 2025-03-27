@@ -1,35 +1,36 @@
-import { Socket } from "socket.io";
-import jwt from "jsonwebtoken"; // For JWT authentication
+import { getToken } from "next-auth/jwt";
 import { UserModel } from "@/routes/users/users.model";
-import { verifyJwt } from "@/utils/jwt";
+import { AuthError } from "@/utils/exception";
+import { parse } from "cookie";
+import { UserSocket } from "@/types/socket.io";
 
-/**
- * Authenticate Socket.IO connections using JWT.
- * @param socket - The Socket.IO socket instance.
- * @returns Promise<string> - Resolves with the authenticated user's ID.
- */
-export async function authenticateSocket(socket: Socket): Promise<string> {
+export async function authenticateSocket(socket: UserSocket): Promise<string> {
   try {
-    const token = socket.handshake.auth.token || socket.handshake.query.token;
+    const cookies = parse(socket.request.headers.cookie || "");
+    const sessionToken = cookies["next-auth.session-token"];
 
-    if (!token) {
-      throw new Error("Authentication token not provided");
+    const token = await getToken({
+      req: {
+        cookies: { "next-auth.session-token": sessionToken },
+        headers: {},
+      } as any,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
+
+    if (!token?._id) {
+      throw new AuthError("Invalid token");
     }
 
-    const decoded = verifyJwt(token, "accessTokenPublicKey") as {
-      userId: string;
-    };
-
-    const user = await UserModel.findById(decoded.userId);
+    const user = await UserModel.findById(token._id);
     if (!user) {
-      throw new Error("User not found");
+      throw new AuthError("User not found");
     }
 
-    (socket as any).userId = user._id.toString();
+    socket.userId = user._id.toString();
 
     return user._id.toString();
   } catch (error) {
     console.error("Socket authentication error:", error);
-    throw new Error("Authentication failed");
+    throw new AuthError("Authentication failed");
   }
 }

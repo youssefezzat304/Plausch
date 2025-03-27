@@ -1,5 +1,5 @@
 import { object, string, TypeOf } from "zod";
-import { ErrorMessage } from "../exceptions/exceptions";
+import { ErrorMessage } from "../exceptions";
 
 export const signupSchema = object({
   displayName: string()

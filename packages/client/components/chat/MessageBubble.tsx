@@ -28,13 +28,13 @@ const MessageBubble = ({
   return (
     <div
       className={cn(
-        "flex gap-2 max-w-[80%]",
+        "flex gap-1 max-w-[80%]",
         isSender ? "ml-auto" : "mr-auto",
         className,
       )}
     >
       {!isSender && (
-        <Avatar className="h-8 w-8">
+        <Avatar className="h-8 w-8 rounded-lg">
           <AvatarImage src={senderAvatar} alt={senderName} />
           <AvatarFallback>{senderName?.[0]}</AvatarFallback>
         </Avatar>
@@ -62,13 +62,15 @@ const MessageBubble = ({
               className="rounded-md max-w-[200px]"
             />
           )}
-        </div>
-
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          {timestamp && <span>{timestamp}</span>}
-          {isSender && isRead && (
-            <span className="text-primary">✓✓</span> // Double tick for read
-          )}
+          <div
+            className={cn(
+              "text-xs text-muted-foreground flex justify-end",
+              isSender && "text-white",
+            )}
+          >
+            {timestamp && <span>{timestamp}</span>}
+            {isSender && isRead && <span className="text-primary">✓✓</span>}
+          </div>
         </div>
       </div>
     </div>

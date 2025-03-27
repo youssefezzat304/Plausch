@@ -1,14 +1,17 @@
-import { User } from "@/types";
+import { FriendRequest } from "@/types";
+import { IUser } from "@shared/types/user.types";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 interface UserStore {
-  user: User | null;
-  friends: User[];
-  contacts: User[];
-  setUser: (user: User | null) => void;
-  setFriends: (friends: User[]) => void;
-  setContacts: (contacts: User[]) => void;
+  user: IUser | null;
+  friends: IUser[];
+  contacts: IUser[];
+  friendRequests: FriendRequest[];
+  setUser: (user: IUser | null) => void;
+  setFriends: (friends: IUser[]) => void;
+  setContacts: (contacts: IUser[]) => void;
+  setFriendRequests: (friendRequests: FriendRequest[]) => void;
 }
 
 export const useUserStore = create<UserStore>()(
@@ -17,9 +20,11 @@ export const useUserStore = create<UserStore>()(
       user: null,
       friends: [],
       contacts: [],
+      friendRequests: [],
       setUser: (user) => set({ user }),
       setFriends: (friends) => set({ friends }),
       setContacts: (contacts) => set({ contacts }),
+      setFriendRequests: (friendRequests) => set({ friendRequests }),
     }),
     {
       name: "me",

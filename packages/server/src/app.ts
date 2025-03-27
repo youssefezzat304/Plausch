@@ -1,19 +1,15 @@
 import { config } from "dotenv";
 import express, { Application, Router } from "express";
 import http from "http";
-// import { Server, Socket } from "socket.io";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
-// import { errorHandler } from "../middlewares/errorHandler.middleware";
-// import { SocketHandler } from "../types/interface";
-// import messageSocketHandler from "../routes/message/message.socket";
 import path from "path";
 import { errorHandler } from "./middleswares/errorHandler.middleware";
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 import initializeSockets from "./utils/sockets";
 
 config();
@@ -22,6 +18,7 @@ const corsOptions = {
   origin: "http://localhost:3001",
   credentials: true,
   methods: "GET,POST,PUT,DELETE,PATCH",
+  allowedHeaders: ["Cookie", "Content-Type"],
 };
 
 const app: Application = express();
@@ -89,7 +86,7 @@ const initializeApp = (controllers: Router[]): void => {
 export {
   app,
   server,
-  // io,
+  io,
   initialiseMiddleware,
   initialiseDatabaseConnection,
   initializeSocketConnection,

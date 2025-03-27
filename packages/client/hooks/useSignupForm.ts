@@ -3,12 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signupInputType, signupSchema } from "@shared/schemas/auth.schema";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import { auth } from "@/api/auth";
 import { ClientError } from "@/utils/errors";
 import { AxiosError } from "axios";
-import { User } from "@/types";
+import { IUser } from "@shared/types/user.types";
 import { useUserStore } from "@/stores/user.store";
 import { toast } from "sonner";
+import { auth } from "@/api/auth";
 
 export const useSignUpForm = () => {
   const router = useRouter();
@@ -28,13 +28,13 @@ export const useSignUpForm = () => {
 
   const signUpMutation = useMutation({
     mutationFn: async (userData: signupInputType) => {
-      const response = await auth.post<User>("/register", userData);
-      localStorage.setItem("me", JSON.stringify(response.data));
+      const response = await auth.post<IUser>("/register", userData);
+
       setUser(response.data);
-      return response;
+      return response.data;
     },
     onSuccess: () => {
-      router.replace("/chat");
+      router.push("/chat");
     },
     onError: (error: AxiosError<ClientError>) => {
       if (error.response?.data.httpCode === 401) {

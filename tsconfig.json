@@ -3,11 +3,11 @@
     "target": "ES2020",
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["./shared/src/*"], // Path alias for shared code
-      "@client/*": ["./client/src/*"], // Path alias for client code
-      "@server/*": ["./server/src/*"] // Path alias for server code
+      "@shared/*": ["./shared/src/*"],
+      "@client/*": ["./client/src/*"],
+      "@server/*": ["./server/src/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"], // Include all TS files in the project
-  "exclude": ["node_modules", "dist"] // Exclude node_modules and output directories
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
 }
