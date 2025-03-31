@@ -1,8 +1,8 @@
 import { NextFunction, Router, Request, Response } from "express";
 import AuthService from "./auth.service";
-import authenticateUser from "@/middleswares/authenticateUser.middleware";
 import { signupInputType } from "@shared/schemas/auth.schema";
 import UserService from "../users/users.service";
+import authenticateUser from "@/middleswares/authenticateUser.middleware";
 
 const authController: Router = Router();
 const authService = new AuthService();
@@ -74,9 +74,11 @@ const logOut = (
 // TODO: forget password endpoint
 // TODO: reset password endpoint
 
+// TODO: authenticate user middleware
+
 authController.post("/auth/register", register);
 authController.post("/auth/login", logIn);
-authController.get("/auth/me", getCurrentUser);
-authController.get("/auth/logout", logOut);
+authController.get("/auth/logout", authenticateUser, logOut);
+authController.get("/auth/me", authenticateUser, getCurrentUser);
 
 export default authController;

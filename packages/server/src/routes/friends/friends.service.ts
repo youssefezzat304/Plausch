@@ -1,14 +1,15 @@
 import { InternalServerError, NotFoundError } from "@/utils/exception";
 import { UserDocument, UserModel } from "../users/users.model";
 import { FriendRequestModel } from "./friends.model";
-import { model, Types } from "mongoose";
+import { Types } from "mongoose";
 import { mongoose } from "@typegoose/typegoose";
+import { PrivateChatModel } from "../privateChats/privateChats.model";
 
 export class FriendsService {
-  public async getUserChats(userId: string) {
+  public async getUserPrivateChats(userId: string) {
     try {
       const user = await UserModel.findById(userId).populate({
-        path: "chats",
+        path: "privateChats",
         populate: [
           {
             path: "participants",
@@ -22,7 +23,7 @@ export class FriendsService {
         ],
       });
 
-      return user?.chats || [];
+      return user?.privateChats || [];
     } catch (error) {
       throw error;
     }
@@ -99,12 +100,23 @@ export class FriendsService {
         throw new InternalServerError("No pending request found");
       }
 
+      const chat = await PrivateChatModel.create(
+        [
+          {
+            participants: [userId, friendId],
+            createdAt: new Date(),
+          },
+        ],
+        { session },
+      ).then((docs) => docs[0]);
+
       await Promise.all([
         UserModel.updateOne(
           { _id: userId },
           {
             $addToSet: {
               contacts: friendId,
+              privateChats: chat._id,
             },
             $pull: {
               friendRequests: friendId,
@@ -117,6 +129,7 @@ export class FriendsService {
           {
             $addToSet: {
               contacts: userId,
+              privateChats: chat._id,
             },
             $pull: {
               sentRequests: userId,
@@ -126,7 +139,8 @@ export class FriendsService {
       ]);
 
       await session.commitTransaction();
-      return friendRequest;
+
+      return { friendRequest, chat };
     } catch (error) {
       await session.abortTransaction();
       throw new InternalServerError(
@@ -139,10 +153,22 @@ export class FriendsService {
 
   public async rejectFriendRequest(userId: string, friendId: string) {
     try {
-      const friendRequest = await FriendRequestModel.findOneAndUpdate(
-        { sender: friendId, recipient: userId, status: "pending" },
-        { status: "rejected" },
-      );
+      const friendRequest = await FriendRequestModel.findOneAndDelete({
+        sender: friendId,
+        recipient: userId,
+        status: "pending",
+      });
+
+      await Promise.all([
+        UserModel.updateOne(
+          { _id: userId },
+          { $pull: { friendRequests: friendId } },
+        ),
+        UserModel.updateOne(
+          { _id: friendId },
+          { $pull: { sentRequests: userId } },
+        ),
+      ]);
 
       return friendRequest;
     } catch (error) {
@@ -210,7 +236,15 @@ export class FriendsService {
         createdAt: new Date(),
       });
 
-      return UserModel.findById(userId);
+      const friendRequest = await FriendRequestModel.findOne({
+        sender: user._id,
+        recipient: friend._id,
+        status: "pending",
+      })
+        .populate("sender", "displayName profilePicture")
+        .lean();
+
+      return friendRequest;
     } catch (error) {
       if (error instanceof InternalServerError) {
         throw error;

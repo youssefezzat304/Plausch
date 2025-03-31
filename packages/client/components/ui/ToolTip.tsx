@@ -1,4 +1,3 @@
-import { ComponentProps, JSX } from "react";
 import {
   Tooltip,
   TooltipContent,

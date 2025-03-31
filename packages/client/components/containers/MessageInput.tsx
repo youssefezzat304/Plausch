@@ -4,11 +4,17 @@ import ButtonIcon from "../buttons/ButtonIcon";
 import { LucidePaperclip } from "lucide-react";
 import { LiaLaughBeamSolid } from "react-icons/lia";
 import { IoMic, IoSendSharp } from "react-icons/io5";
-import { useChat } from "@/hooks/useChat";
 import ToolTip from "../ui/ToolTip";
+import { useChatForm } from "@/hooks/useChatForm";
+import { useSendMessage } from "@/hooks/useSendMessage";
 
 const MessageInput = () => {
-  const { handleSendMessage, register, watch, isSubmitting } = useChat();
+  const { sendMessage } = useSendMessage();
+  const { handleSendMessage, register, watch, isSubmitting } = useChatForm({
+    onSubmit: async (values) => {
+      await sendMessage(values.content);
+    },
+  });
 
   const content = watch("content");
   const sendIconClasses = content?.trim()
@@ -25,6 +31,7 @@ const MessageInput = () => {
         placeholder="Type a message..."
         className="bg-purple-100 w-full py-3 pl-24 rounded-lg border-none"
         {...register("content")}
+        autoComplete="off"
       />
 
       <div className="absolute flex top-1">

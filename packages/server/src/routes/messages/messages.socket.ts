@@ -2,42 +2,57 @@ import { Server } from "socket.io";
 import MessagesService from "../messages/messages.service";
 import { Content } from "./messages.model";
 import { UserSocket } from "@/types/socket.io";
+import ChatsService from "../privateChats/privateChats.service";
+import { PrivateChatModel } from "../privateChats/privateChats.model";
+
+const privateChatsService = new ChatsService();
 
 export default function messageSocketHandler(io: Server, socket: UserSocket) {
   const userId = socket.userId;
   const messagesService = new MessagesService();
 
   socket.on("joinConversation", (conversationId: string) => {
-    socket.join(conversationId);
-    console.log(`User ${userId} joined conversation ${conversationId}`);
+    const roomName = `chats:${conversationId}`;
+    socket.join(roomName);
+    console.log(`User ${userId} joined ${roomName}`);
   });
 
   socket.on(
     "sendMessage",
-    async (data: {
-      conversationId: string;
-      content: Content;
-      senderId: string;
-      recipientId: string;
-    }) => {
+    async (data: { content: Content; conversationId: string }, callback) => {
       try {
-        const { conversationId, content, senderId, recipientId } = data;
+        const senderId = userId;
+        const { content, conversationId } = data;
 
         const message = await messagesService.sendMessage(
           senderId,
-          conversationId,
           content,
-          recipientId,
+          conversationId,
         );
 
-        io.to(conversationId).emit("newMessage", message);
-      } catch (error) {
-        socket.emit("error", { message: "Failed to send message" });
+        io.to(`chats:${conversationId}`).emit("newMessage", message);
+
+        const chat = await privateChatsService.getChat(conversationId);
+
+        io.to(`chatList:${conversationId}`).emit("updateLastMessage", chat);
+      } catch (error: any) {
+        callback({ error: error.message, success: false });
       }
     },
   );
 
   socket.on("typing", (conversationId: string) => {
     socket.to(conversationId).emit("typing", userId);
+  });
+
+  socket.on("leaveConversation", (conversationId: string) => {
+    const rooms = Array.from(socket.rooms);
+
+    rooms.forEach((room) => {
+      if (room.startsWith("chats:") && room !== `chats:${conversationId}`) {
+        socket.leave(room);
+        console.log(`User ${userId} left ${room}`);
+      }
+    });
   });
 }

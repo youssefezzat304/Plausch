@@ -37,14 +37,14 @@ Run the app
 
 - 🔒 **Authentication & Authorization**
 - 📬 **Real-time Messaging**
-- 🖼️ **User Profiles & Avatars**
+- 🖼️ **User Profile details**
 - 📡 **WebSockets for Instant Updates**
 - 🤝 **Add and Remove Friends**
+- ✅ **Status Check** (Online/Offline & Custom Status)
 
 ### Upcoming
 
 - **📂 Sending Media Files** (Images, Videos, Documents)
-- ✅ **Status Check** (Online/Offline & Custom Status)
 - 🔍 **Search** (Users, Messages, and Chats)
 - 👥 **Group Chat** (Multiple Participants, Admin Controls)
 - 🚫 **Block Users** (Prevent Unwanted Interactions)

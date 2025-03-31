@@ -13,17 +13,19 @@ import { toast } from "sonner";
 export const useProfileForm = () => {
   const router = useRouter();
   const currentUser = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+  const userId = currentUser?._id;
 
   const initialValues = {
     displayName: currentUser?.displayName || "",
     email: currentUser?.email || "",
-    phoneNumber: currentUser?.phoneNumber || "",
-    birthDate: currentUser?.birthDate || "",
-    bio: currentUser?.bio || "",
+    phoneNumber: currentUser?.phoneNumber || undefined,
+    birthDate: currentUser?.birthDate || undefined,
+    bio: currentUser?.bio || "Hey there I am using chat app...",
     address: {
-      country: currentUser?.address?.country || "",
-      city: currentUser?.address?.city || "",
-      postalCode: currentUser?.address?.postalCode || "",
+      country: currentUser?.address?.country || undefined,
+      city: currentUser?.address?.city || undefined,
+      postalCode: currentUser?.address?.postalCode || undefined,
     },
   };
 
@@ -33,24 +35,21 @@ export const useProfileForm = () => {
     setError,
     formState: { errors, isSubmitting, isDirty },
     watch,
+    setValue,
+    reset,
   } = useForm<UserInputType>({
     resolver: zodResolver(userSchema),
     defaultValues: initialValues,
   });
 
-  const userId = useUserStore((state) => state.user?._id);
-  const setUser = useUserStore((state) => state.setUser);
-
   const updateProfileMutation = useMutation({
     mutationFn: async (updatedData: UserInputType) => {
       const response = await users.patch<IUser>(`/${userId}`, updatedData);
-      localStorage.setItem("me", JSON.stringify(response.data));
-      setUser(response.data);
       return response;
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
+      setUser(response.data);
       toast.success("Profile has been updated.");
-      router.push("/profile");
     },
     onError: (error: AxiosError<ClientError>) => {
       if (error.response?.data.httpCode === 401) {
@@ -100,5 +99,7 @@ export const useProfileForm = () => {
     onSubmit,
     watch,
     isDirty,
+    reset,
+    setValue,
   };
 };

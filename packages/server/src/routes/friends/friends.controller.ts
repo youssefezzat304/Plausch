@@ -1,10 +1,11 @@
 import { Response, Request, NextFunction, Router } from "express";
 import { FriendsService } from "./friends.service";
+import authenticateUser from "@/middleswares/authenticateUser.middleware";
 
 const friendsController: Router = Router();
 const friendsService = new FriendsService();
 
-const getUserChats = async (
+const getUserPrivateChats = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -12,7 +13,7 @@ const getUserChats = async (
   try {
     const { userId } = req.params;
 
-    const chats = await friendsService.getUserChats(userId);
+    const chats = await friendsService.getUserPrivateChats(userId);
 
     res.status(200).json(chats);
   } catch (error) {
@@ -52,63 +53,17 @@ const getUserFriendRequests = async (
   }
 };
 
-const addFriend = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { userId, email } = req.params;
-
-    const friend = await friendsService.addFriend(userId, email);
-
-    res.status(200).json(friend);
-  } catch (error) {
-    next(error);
-  }
-};
-
-const acceptFriendRequest = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { userId, friendId } = req.params;
-
-    const friendRequest = await friendsService.acceptFriendRequest(
-      userId,
-      friendId,
-    );
-
-    return res.status(200).json(friendRequest);
-  } catch (error) {
-    next(error);
-  }
-};
-
-const rejectFriendRequest = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { userId, friendId } = req.params;
-
-    const friendRequest = await friendsService.rejectFriendRequest(
-      userId,
-      friendId,
-    );
-
-    return res.status(200).json(friendRequest);
-  } catch (error) {
-    next(error);
-  }
-};
-
-friendsController.get("/:userId/chats", getUserChats);
-friendsController.get("/:userId/contacts", getUserContacts);
-friendsController.post("/:userId/add/:email", addFriend);
-friendsController.get("/:userId/friendRequests", getUserFriendRequests);
-friendsController.post("/:userId/accept/:friendId", acceptFriendRequest);
-friendsController.post("/:userId/reject/:friendId", rejectFriendRequest);
-
+friendsController.get(
+  "/:userId/privateChats",
+  authenticateUser,
+  getUserPrivateChats,
+);
+friendsController.get("/:userId/contacts", authenticateUser, getUserContacts);
+friendsController.get(
+  "/:userId/friendRequests",
+  authenticateUser,
+  getUserFriendRequests,
+);
 export default friendsController;
 
 // TODO: POST /:userId/accept/:friendId accept friend request.

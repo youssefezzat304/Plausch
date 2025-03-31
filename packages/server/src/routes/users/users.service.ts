@@ -1,5 +1,5 @@
 import { UserInputType, userSchema } from "@shared/schemas/user.schema";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import {
   AuthError,
   BaseError,
@@ -7,7 +7,8 @@ import {
   NotFoundError,
 } from "@/utils/exception";
 import { ErrorMessage } from "@shared/exceptions";
-import { UserModel } from "./users.model";
+import { UserDocument, UserModel } from "./users.model";
+import { DocumentType } from "@typegoose/typegoose";
 
 class UserService {
   public async updateUserInfo(
@@ -17,20 +18,24 @@ class UserService {
     try {
       userSchema.parse(data);
 
-      const currentUser = await UserModel.findById(userId);
+      const currentUser = (await UserModel.findById(
+        userId,
+      ).lean()) as DocumentType<UserDocument>;
+
       if (!currentUser) throw new NotFoundError(ErrorMessage.GENERIC_ERROR);
 
       if (data.email && data.email !== currentUser.email) {
         const existingUser = await UserModel.findOne({
           email: data.email,
           _id: { $ne: userId },
-        });
+        }).lean();
+
         if (existingUser) throw new AuthError(ErrorMessage.EMAIL_USED);
       }
 
       const hasChanges = (Object.keys(data) as (keyof UserInputType)[]).some(
         (key) => {
-          return (currentUser as any)[key] != data[key];
+          return JSON.stringify(currentUser[key]) !== JSON.stringify(data[key]);
         },
       );
 
@@ -41,8 +46,8 @@ class UserService {
       const updatedUser = await UserModel.findByIdAndUpdate(
         userId,
         { $set: data },
-        { new: true, runValidators: true },
-      );
+        { new: true },
+      ).lean();
 
       if (!updatedUser) throw new NotFoundError(ErrorMessage.GENERIC_ERROR);
 

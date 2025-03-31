@@ -8,7 +8,7 @@ const ContactListItem = ({ user }: { user: IUser }) => {
   return (
     <div
       onClick={() => setCurrentChatUser(user)}
-      className="flex justify-between items-center cursor-pointer whitespace-nowrap overflow-x-hidden text-ellipsis w-full max-w-full p-2.5 rounded-lg transition-all duration-100 hover:bg-secondary-soft active:bg-(--primary-hard) active:scale-98"
+      className="flex justify-between items-center cursor-pointer whitespace-nowrap overflow-x-hidden text-ellipsis h-full w-full max-w-full px-1 py-2 rounded-lg transition-all duration-100 hover:bg-gray-200 active:bg-(--primary-hard) active:scale-98"
     >
       <section className="flex items-center gap-2">
         <Avatar className="h-14 w-14 hover:opacity-90 rounded-2xl">
@@ -22,10 +22,6 @@ const ContactListItem = ({ user }: { user: IUser }) => {
           <label className="text-sm">{user.displayName}</label>
         </div>
       </section>
-
-      {/* <section className="m-2">
-        <p className="text-xs text-gray-500">{lastMessage?.createdAt}</p>
-      </section> */}
     </div>
   );
 };

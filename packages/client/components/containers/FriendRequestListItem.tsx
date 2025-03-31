@@ -7,54 +7,24 @@ import { api } from "@/api/api";
 import { useUserStore } from "@/stores/user.store";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useAddFriend } from "@/hooks/useFriendRequestsManager";
 
 const FriendRequestListItem = ({
   friendRequest,
 }: {
   friendRequest: FriendRequest;
 }) => {
-  const currentUser = useUserStore((state) => state.user);
   const { displayName, profilePicture, _id: friendId } = friendRequest.sender;
   const createdAt = friendRequest.createdAt;
 
-  const acceptMutation = useMutation({
-    mutationFn: async () => {
-      const response = await api.post(
-        `/${currentUser?._id}/accept/${friendId}`,
-      );
-      return response.data;
-    },
-    onSuccess: () => {
-      toast.success(`${displayName} is now your friend.`);
-    },
-    onError: (error) => {
-      console.error(error);
-      toast.error("Failed to accept friend request");
-    },
-  });
-
-  const rejectMutation = useMutation({
-    mutationFn: async () => {
-      const response = await api.post(
-        `/${currentUser?._id}/reject/${friendId}`,
-      );
-      return response.data;
-    },
-    onSuccess: () => {
-      toast.success("Friend request rejected.");
-    },
-    onError: (error) => {
-      console.error(error);
-      toast.error("Failed to reject friend request");
-    },
-  });
+  const { acceptFriendRequest, rejectFriendRequest } = useAddFriend();
 
   const handleAcceptFriendRequest = async () => {
-    acceptMutation.mutate();
+    acceptFriendRequest(friendId);
   };
 
   const handleRejectFriendRequest = async () => {
-    rejectMutation.mutate();
+    rejectFriendRequest(friendId);
   };
 
   return (

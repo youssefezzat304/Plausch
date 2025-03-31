@@ -1,4 +1,4 @@
-import { Chat } from "@/types";
+import { PrivateChat } from "@/types";
 import axios from "axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
@@ -8,7 +8,9 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-export const getChats = async (userId: string): Promise<Chat[]> => {
-  const response = await api.get<Chat[]>(`/${userId}/chats`);
+export const getPrivateChats = async (
+  userId: string,
+): Promise<PrivateChat[]> => {
+  const response = await api.get<PrivateChat[]>(`/${userId}/privateChats`);
   return response.data;
 };

@@ -1,4 +1,4 @@
-import { object, string, TypeOf, array, boolean, date } from "zod";
+import { object, string, TypeOf, array, boolean, date, z } from "zod";
 
 const ObjectIdRegex = /^[0-9a-fA-F]{24}$/;
 
@@ -16,48 +16,51 @@ export const userSchema = object({
     )
     .transform((val) => val.toLowerCase()),
 
-  password: string()
-    .min(6, "Password must be at least 6 characters")
-    .max(64, "Password must be at most 64 characters"),
+  // password: string()
+  //   .min(6, "Password must be at least 6 characters.")
+  //   .max(64, "Password must be at most 64 characters."),
 
-  profilePicture: string()
-    .url("Invalid URL format")
-    .optional()
-    .default("https://github.com/shadcn.png"),
+  // profilePicture: string()
+  //   .url("Invalid URL format.")
+  //   .optional()
+  //   .default("https://github.com/shadcn.png"),
 
-  chats: array(string().regex(ObjectIdRegex)).default([]),
+  // chats: array(string().regex(ObjectIdRegex)).default([]),
 
-  sentRequests: array(string().regex(ObjectIdRegex)).default([]),
+  // sentRequests: array(string().regex(ObjectIdRegex)).default([]),
 
-  friendRequests: array(string().regex(ObjectIdRegex)).default([]),
+  // friendRequests: array(string().regex(ObjectIdRegex)).default([]),
 
-  contacts: array(string().regex(ObjectIdRegex)).default([]),
+  // contacts: array(string().regex(ObjectIdRegex)).default([]),
 
   phoneNumber: string()
-    .regex(/^\+?[1-9]\d{1,14}$/, "Invalid E.164 phone number format")
-    .optional()
-    .default(""),
-
-  birthDate: string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD format")
+    .regex(/^[0-9]*$/, "Phone number can only contain numbers") // Allow empty
+    .transform((val) => val || undefined) // Convert empty to undefined
     .optional(),
 
-  onlineStatus: boolean().default(false),
-  lastSeen: date().default(() => new Date()),
-
-  bio: string()
-    .max(250, "Bio must be at most 250 characters")
-    .default("Hey there I am using chat app..."),
+  birthDate: string()
+    .regex(/^(\d{2}-\d{2}-\d{4})?$/, "Use DD-MM-YYYY format or leave empty")
+    .transform((val) => val || undefined)
+    .optional(),
 
   address: object({
     country: string()
-      .min(2, "Country must be at least 2 characters")
+      .min(0)
+      .transform((val) => val || undefined)
       .optional(),
-    city: string().min(2, "City must be at least 2 characters").optional(),
+    city: string()
+      .min(0)
+      .transform((val) => val || undefined)
+      .optional(),
     postalCode: string()
-      .min(3, "Postal code must be at least 3 characters")
+      .min(0)
+      .transform((val) => val || undefined)
       .optional(),
   }).optional(),
+
+  bio: string()
+    .max(250, "Bio must be at most 250 characters.")
+    .default("Hey there I am using chat app..."),
 }).strict();
 
 export type UserInputType = TypeOf<typeof userSchema>;

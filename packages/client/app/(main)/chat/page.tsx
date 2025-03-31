@@ -10,6 +10,7 @@ import MessageInput from "@/components/containers/MessageInput";
 import { ScrollArea } from "@/components/ui/shadcn/scroll-area";
 import ChatInfoPanel from "@/components/chat/ChatInfoPanel";
 import { FaCircle } from "react-icons/fa";
+import { useUserStore } from "@/stores/user.store";
 
 function ChatPage() {
   const isFriendRequestsOpen = useTabsStore(
@@ -20,7 +21,9 @@ function ChatPage() {
 
   const currentChatUser = useChatStore((state) => state.currentChatUser);
 
-  const onlineStatus = currentChatUser?.onlineStatus;
+  const onlineStatus = useUserStore((state) => state.onlineStatus);
+
+  const isOnline = currentChatUser ? onlineStatus[currentChatUser._id] : false;
 
   return (
     <PanelGroup
@@ -41,17 +44,31 @@ function ChatPage() {
         {currentChatUser ? (
           <div className="w-full h-full flex flex-col">
             <header className="h-22 px-4 py-2 flex justify-between items-center header-mask">
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col">
                 <label htmlFor="name" className="text-2xl font-semibold">
                   {currentChatUser?.displayName}
                 </label>
                 <p className="text-gray-500 flex items-center gap-1">
-                  {onlineStatus ? (
-                    <FaCircle size={12} className="text-green-500" />
-                  ) : (
-                    <FaCircle size={10} className="text-gray-500" />
-                  )}
-                  {onlineStatus ? "Online" : "Offline"}
+                  <span className="inline-flex items-center gap-1">
+                    <FaCircle
+                      size={12}
+                      className={`transition-all duration-1000 ${
+                        isOnline
+                          ? "text-green-500 scale-100"
+                          : "text-gray-400 scale-90 opacity-80"
+                      }`}
+                    />
+
+                    <span
+                      className={`transition-all duration-1000 ${
+                        isOnline
+                          ? "text-green-500 opacity-100"
+                          : "text-gray-500 opacity-70"
+                      }`}
+                    >
+                      {isOnline ? "Online" : "Offline"}
+                    </span>
+                  </span>
                 </p>
               </div>
               <ChatHeaderIcons />

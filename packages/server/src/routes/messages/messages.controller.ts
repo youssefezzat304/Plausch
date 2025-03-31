@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction, Router } from "express";
 import MessagesService from "./messages.service";
+import authenticateUser from "@/middleswares/authenticateUser.middleware";
 
 const messagesController: Router = Router();
 const messagesService = new MessagesService();
@@ -16,6 +17,10 @@ const getMessages = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-messagesController.get("/message/:conversationId", getMessages);
+messagesController.get(
+  "/message/:conversationId",
+  authenticateUser,
+  getMessages,
+);
 
 export default messagesController;

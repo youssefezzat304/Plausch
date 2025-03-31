@@ -1,26 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
 import { useUserStore } from "@/stores/user.store";
 import useTabsStore from "@/stores/tabs.store";
 import SearchBar from "../ui/SearchBar";
 import ContactListItem from "./ContactListItem";
 import ChatListItem from "./ChatListItem";
 import useGetContacts from "@/hooks/useGetContacts";
-import { getChats } from "@/api/api";
 import { IUser } from "@shared/types/user.types";
-import { Chat } from "@/types";
+import { PrivateChat } from "@shared/types/user.types";
+import dayjs from "dayjs";
 
 const ChatList = () => {
   const { isChatsOpen, isContactsOpen } = useTabsStore();
-  const currentUser = useUserStore((state) => state.user);
 
-  const { data: chats, isLoading: chatsLoading } = useQuery({
-    queryKey: ["chats", currentUser?._id],
-    queryFn: () => getChats(currentUser?._id!),
-    enabled: !!currentUser && isChatsOpen,
-  });
+  const unsortedChats = useUserStore((state) => state.chats);
 
-  const { data: contacts, isLoading: contactsLoading } =
-    useGetContacts(isContactsOpen);
+  const chats: PrivateChat[] = Object.values(unsortedChats).sort(
+    (a, b) => dayjs(b.lastActive).valueOf() - dayjs(a.lastActive).valueOf(),
+  );
+
+  const {
+    data: contacts,
+    isLoading: contactsLoading,
+    chatsLoading,
+  } = useGetContacts(isContactsOpen);
 
   const isLoading = isChatsOpen ? chatsLoading : contactsLoading;
   const activeData = isChatsOpen ? chats : contacts;
@@ -39,9 +40,7 @@ const ChatList = () => {
           <>
             {activeData && activeData.length > 0 ? (
               isChatsOpen ? (
-                (activeData as Chat[]).map((chat) => (
-                  <ChatListItem key={chat._id} chat={chat} />
-                ))
+                chats.map((chat) => <ChatListItem key={chat._id} chat={chat} />)
               ) : (
                 (activeData as IUser[]).map((user) => (
                   <ContactListItem key={user._id} user={user} />

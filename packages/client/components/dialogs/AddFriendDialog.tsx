@@ -14,52 +14,26 @@ import { useForm } from "react-hook-form";
 import Input from "../forms/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { object, string } from "zod";
-import { useMutation } from "@tanstack/react-query";
-import { api } from "@/api/api";
-import { useUserStore } from "@/stores/user.store";
-import { toast } from "sonner";
-import { IUser } from "@shared/types/user.types";
+import { useAddFriend } from "@/hooks/useFriendRequestsManager";
+
+const addFriendSchema = object({
+  email: string().email({ message: "Invalid email address format." }),
+});
 
 const AddFriendDialog = () => {
-  const currentUser = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
+  const { addFriend } = useAddFriend();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(
-      object({
-        email: string().email({ message: "Invalid email address format." }),
-      }),
-    ),
+    resolver: zodResolver(addFriendSchema),
     mode: "onTouched",
   });
 
-  const addFriendMutation = useMutation({
-    mutationFn: async (email: string) => {
-      try {
-        const response = await api.post<IUser>(
-          `/${currentUser?._id}/add/${email}`,
-        );
-        setUser(response.data);
-        return response.data;
-      } catch (error: any) {
-        throw new Error(
-          error.response?.data?.message || "Failed to add friend",
-        );
-      }
-    },
-    onSuccess: () => {
-      toast.success("Friend request sent successfully");
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "An unknown error occurred");
-    },
-  });
-
   const onSubmit = (data: { email: string }) => {
-    addFriendMutation.mutate(data.email);
+    addFriend(data.email);
   };
 
   return (
@@ -86,6 +60,7 @@ const AddFriendDialog = () => {
               className="p-3 border-2 rounded-xl"
               placeholder="Enter email address"
               register={register}
+              autoComplete="off"
             />
           </div>
           <DialogFooter>

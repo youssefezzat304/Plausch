@@ -5,10 +5,10 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/shadcn/dropdown-menu";
 import { ComponentProps, JSX } from "react";
+import ToolTip from "./ToolTip";
 
 type DropDownOption = {
   label: string;

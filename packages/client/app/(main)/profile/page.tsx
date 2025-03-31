@@ -8,6 +8,16 @@ import ProfileButton from "@/components/buttons/ProfileButton";
 import Input from "@/components/forms/Input";
 import { useProfileForm } from "@/hooks/useProfileForm";
 import { useUserStore } from "@/stores/user.store";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/shadcn/popover";
+import { Button } from "@/components/ui/shadcn/button";
+import { Calendar } from "@/components/ui/shadcn/calendar";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import dayjs from "dayjs";
 
 const Profile = () => {
   const {
@@ -17,13 +27,17 @@ const Profile = () => {
     onSubmit,
     isSubmitting,
     watch,
+    setValue,
     isDirty,
+    reset,
   } = useProfileForm();
+
   const currentUser = useUserStore((state) => state.user);
-  const displayName = watch("displayName");
+
+  const birthDate = watch("birthDate");
 
   return (
-    <FormWrapper
+    <form
       className="flex w-full h-full ml-[82px] gap-[4px]"
       onSubmit={handleSubmit(onSubmit)}
     >
@@ -48,16 +62,23 @@ const Profile = () => {
 
         <ProfileButton
           label="Upload Photo"
+          type="button"
           icon={<LuUpload className="h-5 w-5" />}
         />
-        <ProfileButton label="Reset" icon={<FaUndo className="h-5 w-5" />} />
+        <ProfileButton
+          label="Reset"
+          onClick={() => reset()}
+          type="button"
+          icon={<FaUndo className="h-5 w-5" />}
+        />
         <ProfileButton
           label="Remove Photo"
+          type="button"
           theme="negative"
           icon={<MdDelete className="h-5 w-5" />}
         />
         <ProfileButton
-          label="Save Changes"
+          label={isSubmitting ? "Saving..." : "Save Changes"}
           theme="positive"
           type="submit"
           icon={<MdOutlineDataSaverOn className="h-5 w-5" />}
@@ -81,15 +102,40 @@ const Profile = () => {
               />
             </div>
 
-            <div>
-              <Input
-                label="Birth Date"
-                name="birthDate"
-                placeholder="Birth Date"
-                className="w-full rounded-lg border p-2"
-                error={errors.birthDate?.message}
-                register={register}
-              />
+            <div className="flex flex-col">
+              <label htmlFor="birthDate" className="text-sm text-gray-500">
+                Birth Date
+              </label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-[240px] justify-start text-left font-normal",
+                      !birthDate && "text-muted-foreground",
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {birthDate ? (
+                      dayjs(birthDate).format("DD/MM/YYYY")
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={birthDate ? new Date(birthDate) : undefined}
+                    onSelect={(date) => {
+                      if (date) {
+                        setValue("birthDate", date.toISOString());
+                      }
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
 
             <div>
@@ -154,7 +200,7 @@ const Profile = () => {
           />
         </div>
       </div>
-    </FormWrapper>
+    </form>
   );
 };
 

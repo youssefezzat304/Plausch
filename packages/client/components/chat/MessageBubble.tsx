@@ -1,7 +1,6 @@
-// components/chat/MessageBubble.tsx
-import { cn } from "@/lib/utils"; // Utility for conditional classNames
+import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/shadcn/avatar";
-
+import { messageTimestamp } from "@/utils/time";
 interface MessageBubbleProps {
   message?: string;
   type: "text" | "image";
@@ -49,7 +48,7 @@ const MessageBubble = ({
           className={cn(
             "rounded-lg p-3",
             isSender
-              ? "bg-primary text-primary-foreground rounded-tr-none"
+              ? "bg-(--primary-hard) text-primary-foreground rounded-tr-none"
               : "bg-muted rounded-tl-none",
           )}
         >
@@ -68,7 +67,7 @@ const MessageBubble = ({
               isSender && "text-white",
             )}
           >
-            {timestamp && <span>{timestamp}</span>}
+            {timestamp && <span>{messageTimestamp(timestamp)}</span>}
             {isSender && isRead && <span className="text-primary">✓✓</span>}
           </div>
         </div>

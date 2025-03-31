@@ -8,7 +8,7 @@ const userService = new UserService();
 const updateInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.params;
-    console.log(userId);
+
     const data = req.body;
 
     const updatedUser = await userService.updateUserInfo(userId, data);

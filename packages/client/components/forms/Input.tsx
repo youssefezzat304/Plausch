@@ -1,6 +1,7 @@
+import { InputHTMLAttributes } from "react";
 import { UseFormRegister } from "react-hook-form";
 
-type InputProps = {
+type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
   name: string;
   placeholder: string;
@@ -36,6 +37,7 @@ const Input = ({
   register,
   error,
   type = "text",
+  ...props
 }: InputProps) => {
   return (
     <>
@@ -51,6 +53,7 @@ const Input = ({
           placeholder={placeholder}
           {...register(name)}
           className={className}
+          {...props}
         />
         <p className="text-sm h-1 text-red-500 my-0.5">{error || " "}</p>
       </div>

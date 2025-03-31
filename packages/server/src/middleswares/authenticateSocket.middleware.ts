@@ -22,11 +22,13 @@ export async function authenticateSocket(socket: UserSocket): Promise<string> {
     }
 
     const user = await UserModel.findById(token._id);
+
     if (!user) {
       throw new AuthError("User not found");
     }
 
     socket.userId = user._id.toString();
+    socket.user = user;
 
     return user._id.toString();
   } catch (error) {

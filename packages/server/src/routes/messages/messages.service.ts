@@ -1,19 +1,15 @@
 import { BadRequestError, InternalServerError } from "@/utils/exception";
 import { Content, MessageModel } from "./messages.model";
 import { ErrorMessage } from "@shared/exceptions";
-import ChatsService from "../chats/chats.service";
-import { ChatModel } from "../chats/chats.model";
+import { PrivateChatModel } from "../privateChats/privateChats.model";
 import mongoose from "mongoose";
 import { UserModel } from "../users/users.model";
-
-const chatService: ChatsService = new ChatsService();
 
 export default class MessagesService {
   public async sendMessage(
     senderId: string,
-    conversationId: string,
     content: Content,
-    recipientId: string,
+    conversationId: string,
   ) {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -22,30 +18,12 @@ export default class MessagesService {
       if (!content.type || (content.type === "text" && !content.text)) {
         throw new BadRequestError("Invalid message content");
       }
-      // TODO: set Chat to const
-      let chatExists = true;
-      await ChatModel.findById(conversationId)
-        .session(session)
-        .catch(() => {
-          chatExists = false;
-        });
-
-      if (!chatExists) {
-        if (!recipientId) throw new BadRequestError("Recipient required");
-
-        const newChat = await chatService.createChat(
-          [senderId, recipientId],
-          session,
-        );
-
-        conversationId = newChat._id.toString();
-      }
 
       const [message] = await MessageModel.create(
         [
           {
-            sender: senderId,
-            conversationId,
+            sender: new mongoose.Types.ObjectId(senderId),
+            conversationId: conversationId,
             content,
             status: {
               sent: true,
@@ -57,13 +35,14 @@ export default class MessagesService {
         { session },
       );
 
-      await ChatModel.findOneAndUpdate(
-        { conversationId: conversationId },
-        { lastMessage: message._id, lastActive: new Date() },
+      await PrivateChatModel.findByIdAndUpdate(
+        conversationId,
+        {
+          lastMessage: message._id,
+          lastActive: new Date(),
+        },
         { session },
       );
-
-      console.log("Message sent", message);
 
       await session.commitTransaction();
 
@@ -82,7 +61,7 @@ export default class MessagesService {
     }
   }
 
-  public async getMessages(conversationId: string) {
+  public async getMessages(conversationId: string | null) {
     try {
       const messages = await MessageModel.find({
         conversationId: conversationId,
@@ -96,6 +75,7 @@ export default class MessagesService {
 
       return messages;
     } catch (error) {
+      if (error instanceof BadRequestError) throw error;
       throw new InternalServerError(ErrorMessage.GENERIC_ERROR);
     }
   }

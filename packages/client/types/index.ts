@@ -18,12 +18,11 @@ export interface Message {
   createdAt: string;
 }
 
-export interface Chat {
+export interface PrivateChat {
   _id: string;
-  conversationId: string;
   participants: IUser[];
   lastMessage?: Message;
-  lastActive: string;
+  lastActive: Date;
 }
 
 export type FriendRequest = {

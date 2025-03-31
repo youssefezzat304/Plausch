@@ -4,10 +4,13 @@ import { authenticateSocket } from "@/middleswares/authenticateSocket.middleware
 import { UserSocket } from "@/types/socket.io";
 import { AuthError } from "./exception";
 import UserService from "@/routes/users/users.service";
-import { FriendsService } from "@/routes/friends/friends.service";
+import friendsSocketHandler from "@/routes/friends/friends.socket";
+import userSocketHandler from "@/routes/users/users.socket";
+import { UserModel } from "@/routes/users/users.model";
 
 const userService = new UserService();
-const friendService = new FriendsService();
+
+const onlineUsers = new Map<string, Set<string>>();
 
 export default function initializeSockets(io: Server) {
   io.use(async (socket, next) => {
@@ -23,31 +26,53 @@ export default function initializeSockets(io: Server) {
   io.on("connection", async (socket: UserSocket) => {
     const userId = socket.userId;
 
-    await userService.setOnlineStatus(userId, true);
-    console.log(`User connected: ${userId}`);
+    if (!onlineUsers.has(userId)) {
+      onlineUsers.set(userId, new Set());
+    }
 
-    const contacts = await friendService.getUserContacts(userId);
+    onlineUsers.get(userId)?.add(socket.id);
 
-    contacts.forEach((contactId) => {
-      io.to(`user:${contactId}`).emit("presence", {
-        userId,
-        onlineStatus: true,
-        lastSeen: null,
-      });
-    });
+    if (onlineUsers.get(userId)?.size === 1) {
+      await userService.setOnlineStatus(userId, true);
+      io.emit("userOnline", userId);
+    }
 
+    userSocketHandler(io, socket);
+    friendsSocketHandler(io, socket);
     messageSocketHandler(io, socket);
 
+    socket.on("onlineFriends", async (callback) => {
+      try {
+        const user = await UserModel.findById(userId).populate(
+          "contacts",
+          "_id",
+        );
+        if (user) {
+          const onlineFriends = user.contacts
+            .filter((contact: any) => onlineUsers.has(contact._id.toString()))
+            .map((contact: any) => contact._id.toString());
+
+          socket.emit("onlineFriends", onlineFriends);
+          callback(onlineFriends);
+        }
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+      }
+    });
+
     socket.on("disconnect", async () => {
-      console.log(`User disconnected: ${userId}`);
-      await userService.setOnlineStatus(userId, false);
-      contacts.forEach((contactId) => {
-        io.to(`user:${contactId}`).emit("presence", {
-          userId,
-          onlineStatus: false,
-          lastSeen: new Date(),
-        });
-      });
+      console.log(`User disconnected: ${userId} (socket: ${socket.id})`);
+      const userSockets = onlineUsers.get(userId);
+      if (userSockets) {
+        userSockets.delete(socket.id);
+
+        if (userSockets.size === 0) {
+          await userService.setOnlineStatus(userId, false);
+          onlineUsers.delete(userId);
+          io.emit("userOffline", userId);
+          console.log(`User ${userId} went offline`);
+        }
+      }
     });
   });
 }

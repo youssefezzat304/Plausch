@@ -5,12 +5,14 @@ import { auth } from "@/api/auth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useSocketStore } from "@/stores/socket.store";
+import useChatStore from "@/stores/chat.store";
 
 const useLogOut = () => {
-  const { setUser } = useUserStore();
+  const setUser = useUserStore((state) => state.setUser);
+  const setCurrentChat = useChatStore((state) => state.setCurrentChat);
+  const setSocket = useSocketStore((state) => state.setSocket);
   const router = useRouter();
   const socket = useSocketStore((state) => state.socket);
-  const setSocket = useSocketStore((state) => state.setSocket);
 
   const { mutate: logOut } = useMutation({
     mutationFn: async () => {
@@ -26,13 +28,13 @@ const useLogOut = () => {
     },
     onSuccess: () => {
       setUser(null);
+      setCurrentChat(null);
       localStorage.removeItem("me");
 
       router.push("/login");
       toast.success("Logged out successfully");
     },
     onError: (error) => {
-      console.error(error);
       toast.error("Failed to log out");
     },
   });

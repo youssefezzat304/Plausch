@@ -1,12 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
-import { api } from "@/api/api";
+import { api, getPrivateChats } from "@/api/api";
 import { useUserStore } from "@/stores/user.store";
 import { QueryKeys } from "@/lib/constants";
 import { IUser } from "@shared/types/user.types";
+import { useEffect } from "react";
 
 const useGetContacts = (enabled: boolean) => {
   const currentUser = useUserStore((state) => state.user);
-  const { setContacts, contacts } = useUserStore();
+  const { setContacts, setChats } = useUserStore();
+
+  const { data: chats, isLoading: chatsLoading } = useQuery({
+    queryKey: [QueryKeys.CHATS, currentUser?._id],
+    queryFn: () => getPrivateChats(currentUser?._id!),
+    enabled: !!currentUser,
+  });
+
+  useEffect(() => {
+    if (chats) {
+      setChats(chats);
+    }
+  }, [chats]);
 
   const query = useQuery<IUser[]>({
     queryKey: [QueryKeys.CONTACTS, { userId: currentUser?._id }],
@@ -17,11 +30,11 @@ const useGetContacts = (enabled: boolean) => {
         signal,
       });
       setContacts(response.data);
+      console.log("contacts", response.data);
       return response.data;
     },
     enabled: !!currentUser?._id && enabled,
     staleTime: 1000 * 60 * 5,
-    placeholderData: contacts ?? undefined,
   });
 
   return {
@@ -30,6 +43,8 @@ const useGetContacts = (enabled: boolean) => {
     isError: query.isError,
     error: query.error,
     refetch: query.refetch,
+    chats,
+    chatsLoading,
   };
 };
 

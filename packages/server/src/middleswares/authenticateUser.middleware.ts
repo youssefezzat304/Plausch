@@ -1,11 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { verifyJwt } from "@/utils/jwt";
 import { AuthError } from "@/utils/exception";
-import { ErrorMessage } from "@shared/exceptions";
-import AuthService from "@/routes/auth/auth.service";
-import { UserDocument } from "@/routes/users/users.model";
-
-const authService = new AuthService();
+import { UserModel } from "@/routes/users/users.model";
+import { getToken } from "next-auth/jwt";
 
 const authenticateUser = async (
   req: Request,
@@ -13,22 +9,29 @@ const authenticateUser = async (
   next: NextFunction,
 ): Promise<Response | void> => {
   try {
-    const { accessToken } = req.cookies;
+    const token = await getToken({
+      req: req,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
 
-    const decoded = verifyJwt<UserDocument>(
-      accessToken,
-      "accessTokenPublicKey",
-    );
-
-    if (!decoded) {
-      throw new AuthError(ErrorMessage.ACC_TOKEN);
+    if (!token?._id) {
+      throw new AuthError("Invalid token");
     }
 
-    res.locals.user = decoded;
+    const user = await UserModel.findById(token._id);
+    if (!user) {
+      throw new AuthError("User not found");
+    }
+
+    res.locals.user = user;
 
     return next();
   } catch (error) {
-    next(error);
+    console.error("Socket authentication error:", error);
+    if (error instanceof AuthError) {
+      return next(error);
+    }
+    throw new AuthError("Authentication failed");
   }
 };
 

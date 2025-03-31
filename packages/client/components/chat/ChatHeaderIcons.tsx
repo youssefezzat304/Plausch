@@ -14,6 +14,7 @@ const ChatHeaderIcons = () => {
 
       <ButtonIcon tooltip="Voice call" icon={<BsTelephone />} />
 
+      {/* TODO: add tooltip to the dropdown */}
       <Dropdown
         label="Chat settings"
         icon={<BsThreeDotsVertical />}

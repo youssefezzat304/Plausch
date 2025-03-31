@@ -3,7 +3,6 @@ import { IoClose } from "react-icons/io5";
 import ButtonIcon from "../buttons/ButtonIcon";
 import useTabsStore from "@/stores/tabs.store";
 import { useUserStore } from "@/stores/user.store";
-import { useEffect } from "react";
 import { api } from "@/api/api";
 import { FriendRequest } from "@/types";
 import FriendRequestListItem from "./FriendRequestListItem";
@@ -15,7 +14,7 @@ const FriendRequestsPanel = () => {
   const friendRequests = useUserStore((state) => state.friendRequests);
   const setTab = useTabsStore((state) => state.setTab);
   const setFriendRequests = useUserStore((state) => state.setFriendRequests);
-  
+
   // TODO: set up isLoading and isError.
   const { isLoading, isError } = useQuery({
     queryKey: ["friendRequests", currentUser?._id],

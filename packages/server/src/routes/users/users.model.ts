@@ -10,7 +10,7 @@ import {
 } from "@typegoose/typegoose";
 import mongoose, { Types } from "mongoose";
 import bcrypt from "bcryptjs";
-import { ChatDocument } from "../chats/chats.model";
+import { PrivateChatDocument } from "../privateChats/privateChats.model";
 
 @pre<UserDocument>("save", async function () {
   if (!this.isModified("password")) return;
@@ -66,14 +66,15 @@ export class UserDocument {
   public profilePicture!: string;
 
   @prop({
-    ref: "ChatDocument",
+    ref: "PrivateChatDocument",
     default: [],
     validate: {
-      validator: (chats: Types.ObjectId[]) => chats.length <= 1000,
-      message: "Maximum 1000 chats allowed",
+      validator: (privateChats: Types.ObjectId[]) =>
+        privateChats.length <= 1000,
+      message: "Maximum 1000 privateChats allowed",
     },
   })
-  public chats!: Ref<ChatDocument>[];
+  public privateChats!: Ref<PrivateChatDocument>[];
 
   @prop({
     ref: "UserDocument",
