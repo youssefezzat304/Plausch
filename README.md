@@ -93,7 +93,7 @@ Run the app
 
 ### Users
 
-| col1    | col2             | col3                 |        |
+| Method    | Endpoint             | Description                 |   Authentication required     |
 | ------- | ---------------- | -------------------- | ------ |
 | `GET`   | `/users/:userId` | Get specific user    | ✅ Yes |
 | `PATCH` | `/users/:userId` | Update specific user | ✅ Yes |
