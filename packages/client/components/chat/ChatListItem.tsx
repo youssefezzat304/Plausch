@@ -1,9 +1,9 @@
-import { PrivateChat } from "@/types";
+import { PrivateChat } from "@shared/types";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/shadcn/avatar";
 import useChatStore from "@/stores/chat.store";
 import { useUserStore } from "@/stores/user.store";
 import { FaCircle } from "react-icons/fa";
-import { messageTimestamp } from "@/utils/time";
+import { timestamp } from "@/utils/time";
 
 const ChatListItem = ({ chat }: { chat: PrivateChat }) => {
   const { participants, lastMessage } = chat;
@@ -59,7 +59,7 @@ const ChatListItem = ({ chat }: { chat: PrivateChat }) => {
 
       <section className="m-2">
         <p className="text-xs text-gray-500">
-          {messageTimestamp(lastMessage?.createdAt)}
+          {timestamp(lastMessage?.createdAt)}
         </p>
       </section>
     </div>

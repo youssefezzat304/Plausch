@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import { getSession } from "next-auth/react";
-import { IUser } from "@shared/types/user.types";
+import { IUser } from "@shared/types";
 
 const SOCKET_URL =
   process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:8080";

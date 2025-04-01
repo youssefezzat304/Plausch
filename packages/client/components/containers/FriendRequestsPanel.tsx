@@ -4,7 +4,7 @@ import ButtonIcon from "../buttons/ButtonIcon";
 import useTabsStore from "@/stores/tabs.store";
 import { useUserStore } from "@/stores/user.store";
 import { api } from "@/api/api";
-import { FriendRequest } from "@/types";
+import { FriendRequest } from "@shared/types";
 import FriendRequestListItem from "./FriendRequestListItem";
 import { ScrollArea } from "../ui/shadcn/scroll-area";
 import { useQuery } from "@tanstack/react-query";

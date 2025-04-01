@@ -1,7 +1,7 @@
 import axios from "axios";
 import { loginInputType } from "@shared/schemas/auth.schema";
 import { signIn } from "next-auth/react";
-import { IUser } from "@shared/types/user.types";
+import { IUser } from "@shared/types";
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
 
 export const auth = axios.create({

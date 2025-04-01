@@ -3,37 +3,39 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { UserInputType, userSchema } from "@shared/schemas/user.schema";
 import { useMutation } from "@tanstack/react-query";
 import { users } from "@/api/users";
-import { IUser } from "@shared/types/user.types";
+import { IUser } from "@shared/types";
 import { useUserStore } from "@/stores/user.store";
 import { AxiosError } from "axios";
 import { ClientError } from "@/utils/errors";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useEffect, useMemo } from "react";
 
 export const useProfileForm = () => {
-  const router = useRouter();
-  const currentUser = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);
+  const currentUser = useUserStore((state) => state.user);
   const userId = currentUser?._id;
 
-  const initialValues = {
-    displayName: currentUser?.displayName || "",
-    email: currentUser?.email || "",
-    phoneNumber: currentUser?.phoneNumber || undefined,
-    birthDate: currentUser?.birthDate || undefined,
-    bio: currentUser?.bio || "Hey there I am using chat app...",
-    address: {
-      country: currentUser?.address?.country || undefined,
-      city: currentUser?.address?.city || undefined,
-      postalCode: currentUser?.address?.postalCode || undefined,
-    },
-  };
+  const initialValues = useMemo(
+    () => ({
+      displayName: currentUser?.displayName || "",
+      email: currentUser?.email || "",
+      phoneNumber: currentUser?.phoneNumber || "",
+      birthDate: currentUser?.birthDate || "",
+      bio: currentUser?.bio || "Hey there I am using chat app...",
+      address: {
+        country: currentUser?.address?.country || "",
+        city: currentUser?.address?.city || "",
+        postalCode: currentUser?.address?.postalCode || "",
+      },
+    }),
+    [currentUser],
+  );
 
   const {
     register,
     handleSubmit,
     setError,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors, isSubmitting, isDirty, dirtyFields },
     watch,
     setValue,
     reset,
@@ -42,14 +44,24 @@ export const useProfileForm = () => {
     defaultValues: initialValues,
   });
 
+  useEffect(() => {
+    reset(initialValues);
+  }, [initialValues, reset]);
+
   const updateProfileMutation = useMutation({
     mutationFn: async (updatedData: UserInputType) => {
-      const response = await users.patch<IUser>(`/${userId}`, updatedData);
+      const response = await users.patch<{ user: IUser }>(
+        `/${userId}`,
+        updatedData,
+      );
       return response;
     },
     onSuccess: (response) => {
-      setUser(response.data);
-      toast.success("Profile has been updated.");
+      if (response.data.user) {
+        console.log("response.data.user >>>>>", response.data.user);
+        setUser(response.data.user);
+        toast.success("Profile has been updated.");
+      }
     },
     onError: (error: AxiosError<ClientError>) => {
       if (error.response?.data.httpCode === 401) {
@@ -69,22 +81,8 @@ export const useProfileForm = () => {
         return;
       }
 
-      const validationResult = userSchema.safeParse(data);
-
-      if (!validationResult.success) {
-        validationResult.error.errors.forEach((err) => {
-          const fieldName = err.path.join(".") as keyof UserInputType;
-          setError(fieldName, {
-            type: "manual",
-            message: err.message,
-          });
-        });
-        return;
-      }
-
-      updateProfileMutation.mutate(validationResult.data);
+      updateProfileMutation.mutate(data);
     } catch (error) {
-      console.error("Unexpected error:", error);
       setError("root", {
         message: "An unexpected error occurred. Please try again.",
       });

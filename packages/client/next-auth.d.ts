@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import { IUser } from "@shared/types/user.types";
+import { IUser } from "@shared/types";
 
 declare module "next-auth" {
   interface Session {

@@ -2,7 +2,7 @@ import { useUserStore } from "@/stores/user.store";
 import { ClientError } from "@/utils/errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginInputType, loginSchema } from "@shared/schemas/auth.schema";
-import { IUser } from "@shared/types/user.types";
+import { IUser } from "@shared/types";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { getSession, signIn } from "next-auth/react";

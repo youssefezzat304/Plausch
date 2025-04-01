@@ -1,5 +1,6 @@
 "use client";
 import { CiSearch } from "react-icons/ci";
+import { toast } from "sonner";
 
 const SearchBar = () => {
   return (
@@ -14,6 +15,13 @@ const SearchBar = () => {
         />
       </div>
 
+      <button
+        title="click"
+        className="bg-primary-soft text-primary-hard px-4 py-2 rounded-lg cursor-pointer"
+        onClick={() => toast.success("Toaster UI test")}
+      >
+        Test
+      </button>
       {/* <CreateGroup /> */}
     </div>
   );

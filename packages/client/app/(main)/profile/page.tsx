@@ -2,8 +2,6 @@
 import { MdDelete, MdOutlineDataSaverOn } from "react-icons/md";
 import { FaUndo } from "react-icons/fa";
 import { LuUpload } from "react-icons/lu";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import FormWrapper from "@/components/forms/FormWrapper";
 import ProfileButton from "@/components/buttons/ProfileButton";
 import Input from "@/components/forms/Input";
 import { useProfileForm } from "@/hooks/useProfileForm";
@@ -18,6 +16,11 @@ import { Calendar } from "@/components/ui/shadcn/calendar";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/shadcn/avatar";
 
 const Profile = () => {
   const {
@@ -57,6 +60,7 @@ const Profile = () => {
             {...register("displayName")}
             className="cursor-pointer bg-transparent text-center text-xl font-bold focus:outline-none"
             placeholder="Display name"
+            defaultValue={currentUser?.displayName}
           />
         </div>
 

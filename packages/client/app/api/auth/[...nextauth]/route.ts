@@ -1,7 +1,7 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { login } from "@/lib/auth";
-import { IUser } from "@shared/types/user.types";
+import { IUser } from "@shared/types";
 import { Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import type { NextAuthOptions } from "next-auth";
@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
           displayName: user.displayName,
           email: user.email,
           profilePicture: user.profilePicture,
-          chats: user.chats,
+          privateChats: user.privateChats,
           sentRequests: user.sentRequests,
           friendRequests: user.friendRequests,
           contacts: user.contacts,
@@ -52,7 +52,7 @@ export const authOptions: NextAuthOptions = {
           displayName: token.displayName,
           email: token.email,
           profilePicture: token.profilePicture,
-          chats: token.chats,
+          privateChats: token.privateChats,
           sentRequests: token.sentRequests,
           friendRequests: token.friendRequests,
           contacts: token.contacts,

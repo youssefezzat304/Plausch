@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { ClientError } from "@/utils/errors";
 import { AxiosError } from "axios";
-import { IUser } from "@shared/types/user.types";
+import { IUser } from "@shared/types";
 import { useUserStore } from "@/stores/user.store";
 import { toast } from "sonner";
 import { auth } from "@/api/auth";

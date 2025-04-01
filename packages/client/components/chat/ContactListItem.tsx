@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/shadcn/avatar";
 import useChatStore from "@/stores/chat.store";
-import { IUser } from "@shared/types/user.types";
+import { IUser } from "@shared/types";
 
 const ContactListItem = ({ user }: { user: IUser }) => {
   const setCurrentChatUser = useChatStore((state) => state.setCurrentChatUser);

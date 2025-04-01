@@ -1,4 +1,4 @@
-import { UserSocket } from "@/types/socket.io";
+import { UserSocket } from "@shared/types/socket.io";
 import { Server } from "socket.io";
 import { FriendsService } from "./friends.service";
 

@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { useSocketStore } from "@/stores/socket.store";
-import { FriendRequest } from "@/types";
+import { FriendRequest } from "@shared/types";
 
 export function useAddFriend() {
   const socket = useSocketStore((state) => state.socket);

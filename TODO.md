@@ -1,8 +1,12 @@
-- Fix profile changes end point.
-- Fix lastActive in privateChate
+- ~~Fix profile changes end point.~~
+- ~~Fix lastActive in privateChate~~
 - Change profilePicture to avatar on UserDocument and IUser
-- Change all @/types route to @/shared/types
-- Fix last messages time stamps in chat list.
+- ~~Change all @shared/types route to @/shared/types~~
+- ~~Fix last messages time stamps in chat list.~~
 - Add sperating messages by date.
 - Track unread messages.
 - Dockerize.
+- Change toaster UI.
+- Add create group button.
+- Create group chat model and type.
+-

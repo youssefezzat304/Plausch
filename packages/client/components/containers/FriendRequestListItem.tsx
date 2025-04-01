@@ -1,7 +1,7 @@
 import { IoCheckmark, IoClose } from "react-icons/io5";
 import ButtonIcon from "../buttons/ButtonIcon";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/shadcn/avatar";
-import { FriendRequest } from "@/types";
+import { FriendRequest } from "@shared/types";
 import dayjs from "dayjs";
 import { api } from "@/api/api";
 import { useUserStore } from "@/stores/user.store";

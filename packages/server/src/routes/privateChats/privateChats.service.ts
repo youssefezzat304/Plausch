@@ -8,7 +8,7 @@ class ChatsService {
         .populate({
           path: "lastMessage",
           model: "MessageDocument",
-          select: "content sender",
+          select: "content sender createdAt",
         })
         .populate({
           path: "participants",

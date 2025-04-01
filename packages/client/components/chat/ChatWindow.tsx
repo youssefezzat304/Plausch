@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import MessageBubble from "./MessageBubble";
 import { useUserStore } from "@/stores/user.store";
 import useChatStore from "@/stores/chat.store";
-import { Message } from "@/types";
-import dayjs from "dayjs";
+import { Message } from "@shared/types";
 import { FaAngleDown } from "react-icons/fa";
 import useMessageManager from "@/hooks/useMessageManager";
 

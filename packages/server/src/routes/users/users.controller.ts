@@ -13,7 +13,7 @@ const updateInfo = async (req: Request, res: Response, next: NextFunction) => {
 
     const updatedUser = await userService.updateUserInfo(userId, data);
 
-    return res.status(200).json(updatedUser);
+    return res.status(200).json({ user: updatedUser });
   } catch (error) {
     next(error);
   }

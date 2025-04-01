@@ -15,8 +15,8 @@ const onlineUsers = new Map<string, Set<string>>();
 export default function initializeSockets(io: Server) {
   io.use(async (socket, next) => {
     try {
-      const userId = await authenticateSocket(socket);
-      socket.userId = userId;
+      const user = await authenticateSocket(socket);
+      socket.user = user;
       next();
     } catch (error) {
       next(new AuthError("Authentication error"));

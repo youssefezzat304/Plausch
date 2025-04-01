@@ -165,5 +165,4 @@ export class UserDocument {
   }
 }
 
-export const UserModel =
-  mongoose.models.UserDocument || getModelForClass(UserDocument);
+export const UserModel = getModelForClass(UserDocument);

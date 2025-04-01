@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/shadcn/sonner";
 import AuthProvider from "@/providers/AuthProvider";
 import AuthGuard from "@/components/auth/AuthGuard";
 import SocketInitializer from "@/providers/SocketInitializer";
+import { UserInitializer } from "@/providers/UserInitializer";
 
 const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
@@ -27,6 +28,7 @@ export default function RootLayout({
 
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
+            <UserInitializer />
             <AuthGuard>{children}</AuthGuard>
           </AuthProvider>
           <Toaster richColors />

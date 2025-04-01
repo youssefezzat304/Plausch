@@ -16,22 +16,10 @@ export const userSchema = object({
     )
     .transform((val) => val.toLowerCase()),
 
-  // password: string()
-  //   .min(6, "Password must be at least 6 characters.")
-  //   .max(64, "Password must be at most 64 characters."),
-
   // profilePicture: string()
   //   .url("Invalid URL format.")
   //   .optional()
   //   .default("https://github.com/shadcn.png"),
-
-  // chats: array(string().regex(ObjectIdRegex)).default([]),
-
-  // sentRequests: array(string().regex(ObjectIdRegex)).default([]),
-
-  // friendRequests: array(string().regex(ObjectIdRegex)).default([]),
-
-  // contacts: array(string().regex(ObjectIdRegex)).default([]),
 
   phoneNumber: string()
     .regex(/^[0-9]*$/, "Phone number can only contain numbers") // Allow empty

@@ -1,5 +1,5 @@
-import { PrivateChat, Message } from "@/types";
-import { IUser } from "@shared/types/user.types";
+import { PrivateChat, Message } from "@shared/types";
+import { IUser } from "@shared/types";
 import { create } from "zustand";
 import { produce } from "immer";
 

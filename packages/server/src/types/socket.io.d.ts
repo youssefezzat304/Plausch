@@ -1,10 +1,11 @@
 import { Socket } from "socket.io";
-import { IUser } from "@shared/types/user.types";
+import { IUser } from "@shared/types";
+import { UserDocument } from "@/routes/users/users.model";
 
 declare module "socket.io" {
   interface Socket {
     userId: string;
-    user: IUser;
+    user: UserDocument;
   }
 }
 

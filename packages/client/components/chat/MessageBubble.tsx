@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/shadcn/avatar";
 import { messageTimestamp } from "@/utils/time";
+
 interface MessageBubbleProps {
   message?: string;
   type: "text" | "image";

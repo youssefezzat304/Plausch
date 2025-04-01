@@ -1,15 +1,10 @@
 import dayjs from "dayjs";
-import { Message } from "@/types";
+import { Message } from "@shared/types";
 
 export const messageTimestamp = (timestamp?: string) => {
-  const today = dayjs();
   const givenDate = dayjs(timestamp);
 
-  if (today.isSame(givenDate, "day")) {
-    return givenDate.format("hh:mm A");
-  } else {
-    return givenDate.format("DD/MM/YY hh:mm A");
-  }
+  return givenDate.format("hh:mm A");
 };
 
 export const timestamp = (timestamp?: string) => {

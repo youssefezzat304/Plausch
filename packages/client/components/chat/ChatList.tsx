@@ -4,8 +4,8 @@ import SearchBar from "../ui/SearchBar";
 import ContactListItem from "./ContactListItem";
 import ChatListItem from "./ChatListItem";
 import useGetContacts from "@/hooks/useGetContacts";
-import { IUser } from "@shared/types/user.types";
-import { PrivateChat } from "@shared/types/user.types";
+import { IUser } from "@shared/types";
+import { PrivateChat } from "@shared/types";
 import dayjs from "dayjs";
 
 const ChatList = () => {

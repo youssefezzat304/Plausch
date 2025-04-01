@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { IUser, FriendRequest, PrivateChat } from "@shared/types/user.types";
+import { IUser, FriendRequest, PrivateChat } from "@shared/types";
 
 interface UserStore {
   user: IUser | null;

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api, getPrivateChats } from "@/api/api";
 import { useUserStore } from "@/stores/user.store";
 import { QueryKeys } from "@/lib/constants";
-import { IUser } from "@shared/types/user.types";
+import { IUser } from "@shared/types";
 import { useEffect } from "react";
 
 const useGetContacts = (enabled: boolean) => {

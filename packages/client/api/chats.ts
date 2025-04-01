@@ -1,4 +1,4 @@
-import { PrivateChat } from "@/types";
+import { PrivateChat } from "@shared/types";
 import axios from "axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";

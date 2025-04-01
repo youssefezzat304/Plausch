@@ -1,7 +1,7 @@
 import useChatStore from "@/stores/chat.store";
 import { useSocketStore } from "@/stores/socket.store";
 import { useUserStore } from "@/stores/user.store";
-import { FriendRequest, Message, PrivateChat } from "@/types";
+import { FriendRequest, Message, PrivateChat } from "@shared/types";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 

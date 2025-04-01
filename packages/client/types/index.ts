@@ -1,4 +1,4 @@
-import { IUser } from "@shared/types/user.types";
+import { IUser } from "@shared/types";
 
 export interface Message {
   _id: string;

@@ -2,9 +2,12 @@ import { getToken } from "next-auth/jwt";
 import { UserModel } from "@/routes/users/users.model";
 import { AuthError } from "@/utils/exception";
 import { parse } from "cookie";
-import { UserSocket } from "@/types/socket.io";
+import { UserSocket } from "@shared/types/socket.io";
+import { UserDocument } from "@/routes/users/users.model";
 
-export async function authenticateSocket(socket: UserSocket): Promise<string> {
+export async function authenticateSocket(
+  socket: UserSocket,
+): Promise<UserDocument> {
   try {
     const cookies = parse(socket.request.headers.cookie || "");
     const sessionToken = cookies["next-auth.session-token"];
@@ -30,7 +33,7 @@ export async function authenticateSocket(socket: UserSocket): Promise<string> {
     socket.userId = user._id.toString();
     socket.user = user;
 
-    return user._id.toString();
+    return user;
   } catch (error) {
     console.error("Socket authentication error:", error);
     throw new AuthError("Authentication failed");

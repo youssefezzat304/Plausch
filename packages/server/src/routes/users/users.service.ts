@@ -40,7 +40,7 @@ class UserService {
       );
 
       if (!hasChanges) {
-        return { message: "No changes detected.", user: currentUser };
+        throw new InternalServerError("No changes detected.");
       }
 
       const updatedUser = await UserModel.findByIdAndUpdate(

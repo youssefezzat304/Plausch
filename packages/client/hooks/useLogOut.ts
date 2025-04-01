@@ -34,7 +34,7 @@ const useLogOut = () => {
       router.push("/login");
       toast.success("Logged out successfully");
     },
-    onError: (error) => {
+    onError: () => {
       toast.error("Failed to log out");
     },
   });

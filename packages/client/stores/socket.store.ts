@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { Socket } from "socket.io-client";
-import { Message } from "@/types";
+import { Message } from "@shared/types";
 
 interface SocketStore {
   socket: Socket | null;

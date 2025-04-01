@@ -3,7 +3,6 @@ import MessagesService from "../messages/messages.service";
 import { Content } from "./messages.model";
 import { UserSocket } from "@/types/socket.io";
 import ChatsService from "../privateChats/privateChats.service";
-import { PrivateChatModel } from "../privateChats/privateChats.model";
 
 const privateChatsService = new ChatsService();
 
