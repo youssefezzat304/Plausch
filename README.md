@@ -61,8 +61,8 @@ Run the app
 - 📬 **Real-time Messaging**
 - 🖼️ **User Profile details**
 - 📡 **WebSockets for Instant Updates**
-- 🤝 **Add and Remove Friends**
-- ✅ **Status Check** (Online/Offline & Custom Status)
+- 🤝 **Add Friends**
+- ✅ **Status Check** (Online/Offline)
 
 ### Upcoming
 
