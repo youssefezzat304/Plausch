@@ -29,7 +29,7 @@ const MessageInput = () => {
       <input
         type="text"
         placeholder="Type a message..."
-        className="bg-purple-100 w-full py-3 pl-24 rounded-lg border-none"
+        className="bg-purple-100 w-full py-3 px-24 rounded-lg border-none"
         {...register("content")}
         autoComplete="off"
       />

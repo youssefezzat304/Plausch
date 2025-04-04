@@ -32,10 +32,10 @@ export interface Message {
   };
   status: {
     sent: boolean;
-    deliveredTo: string[];
-    readBy: string[];
+    deliveredTo: IUser[];
+    readBy: IUser[];
   };
-  createdAt: string;
+  createdAt: Date;
 }
 
 export interface PrivateChat {

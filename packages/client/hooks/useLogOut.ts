@@ -20,16 +20,15 @@ const useLogOut = () => {
         socket.disconnect();
         setSocket(null);
       }
-
-      await signOut({ redirect: false });
-
       const response = await auth.get("/logout");
+
+      await signOut({ redirect: true, callbackUrl: "/login" });
+
       return response.data;
     },
     onSuccess: () => {
       setUser(null);
       setCurrentChat(null);
-      localStorage.removeItem("me");
 
       router.push("/login");
       toast.success("Logged out successfully");

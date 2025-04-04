@@ -53,5 +53,6 @@ coverage/
 dist/
 .cache/
 *.swp
+image/
 
 Database

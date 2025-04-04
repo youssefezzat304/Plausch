@@ -1,0 +1,45 @@
+version: "3"
+services:
+  next-app:
+    build: ./packages/client
+    image: client-side
+    stdin_open: true
+    ports:
+      - "3001:3001"
+    networks:
+      - app
+
+  api-server:
+    build: ./packages/server
+    image: server-side
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    environment:
+      - DATABASE_CONNECTION=${DATABASE_CONNECTION:-mongodb://admin:secret@mongo:27017/chatapp?authSource=admin}
+    networks:
+      - app
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    ports:
+      - "27017:27017"
+    networks:
+      - app
+    volumes:
+      - mongo-data:/data/db
+    deploy:
+      replicas: ${USE_LOCAL_MONGO:-1}
+
+networks:
+  app:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local

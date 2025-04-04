@@ -30,7 +30,7 @@ const ChatInfoPanel = () => {
         />
       </div>
 
-      <div className="flex flex-col items-center py-4">
+      <div className="flex flex-col items-center py-6 px-4">
         <Avatar className="cursor-pointer hover:opacity-90">
           <AvatarImage
             src="https://github.com/shadcn.png"

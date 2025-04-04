@@ -1,4 +1,4 @@
-import { UserSocket } from "@shared/types/socket.io";
+import { UserSocket } from "@/types/socket.io";
 import { Server } from "socket.io";
 
 export default function userSocketHandler(io: Server, socket: UserSocket) {

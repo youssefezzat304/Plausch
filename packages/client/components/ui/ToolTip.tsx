@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
@@ -10,11 +11,15 @@ const ToolTip = ({
   tooltip,
   side,
   theme,
+  className,
+  delayDuration = 100,
 }: {
   children: React.ReactNode;
   tooltip: string;
   side: "top" | "right" | "bottom" | "left";
   theme: "dark" | "light";
+  className?: string;
+  delayDuration?: number;
 }) => {
   const tooltipStyles = {
     dark: "bg-[hsl(240,10%,3.9%)] text-[hsl(0,0%,100%)] p-2 rounded-lg shadow-lg",
@@ -24,9 +29,12 @@ const ToolTip = ({
 
   return (
     <TooltipProvider>
-      <Tooltip>
+      <Tooltip delayDuration={delayDuration}>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
-        <TooltipContent side={side} className={tooltipStyles[theme]}>
+        <TooltipContent
+          side={side}
+          className={cn(tooltipStyles[theme], className)}
+        >
           {tooltip}
         </TooltipContent>
       </Tooltip>

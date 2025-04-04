@@ -1,12 +1,19 @@
-- ~~Fix profile changes end point.~~
-- ~~Fix lastActive in privateChate~~
-- Change profilePicture to avatar on UserDocument and IUser
-- ~~Change all @shared/types route to @/shared/types~~
-- ~~Fix last messages time stamps in chat list.~~
-- Add sperating messages by date.
-- Track unread messages.
-- Dockerize.
-- Change toaster UI.
-- Add create group button.
-- Create group chat model and type.
--
+- [x] Fix log out function
+- [x] Setup placeholder landing page.
+- [x] Fix profile changes end point.
+- [x] Fix lastActive in privateChate
+- [ ] Change profilePicture to avatar on UserDocument and IUser
+- [x] Change all @shared/types route to @/shared/types
+- [x] Fix last messages time stamps in chat list.
+- [ ] Add sperating messages by date.
+- [ ] Track unread messages.
+- [x] Dockerize.
+- [ ] Add create group button.
+- [ ] Create group chat model and type.
+- [ ] Add notification tab
+- [ ] setup toasters
+- [ ] Add forget password
+- [ ] Fix chat list item message timestamp on long messages
+- [ ] Fix stable message draft in message input when switching between chats
+- [ ] Add friend request animation
+- [ ] Add message bubble animation

@@ -2,7 +2,7 @@ import { getToken } from "next-auth/jwt";
 import { UserModel } from "@/routes/users/users.model";
 import { AuthError } from "@/utils/exception";
 import { parse } from "cookie";
-import { UserSocket } from "@shared/types/socket.io";
+import { UserSocket } from "@/types/socket.io";
 import { UserDocument } from "@/routes/users/users.model";
 
 export async function authenticateSocket(
@@ -35,7 +35,6 @@ export async function authenticateSocket(
 
     return user;
   } catch (error) {
-    console.error("Socket authentication error:", error);
     throw new AuthError("Authentication failed");
   }
 }

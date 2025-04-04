@@ -42,7 +42,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
     if (
       status === "unauthenticated" &&
-      !["/login", "/signup"].includes(pathname)
+      !["/login", "/signup", "/"].includes(pathname)
     ) {
       router.push("/login");
     }

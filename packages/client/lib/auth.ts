@@ -1,5 +1,4 @@
 import { auth } from "@/api/auth";
-import { getSession, signOut } from "next-auth/react";
 
 export const login = async (
   credentials: Record<"email" | "password", string> | undefined,

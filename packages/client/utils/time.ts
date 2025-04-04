@@ -1,13 +1,13 @@
 import dayjs from "dayjs";
 import { Message } from "@shared/types";
 
-export const messageTimestamp = (timestamp?: string) => {
+export const messageTimestamp = (timestamp: string | Date) => {
   const givenDate = dayjs(timestamp);
 
   return givenDate.format("hh:mm A");
 };
 
-export const timestamp = (timestamp?: string) => {
+export const timestamp = (timestamp: string | Date) => {
   if (!timestamp) return "";
 
   const now = dayjs();
@@ -29,7 +29,7 @@ export const timestamp = (timestamp?: string) => {
   }
 };
 
-export const getDayLabel = (timestamp: string) => {
+export const getDayLabel = (timestamp: string | Date) => {
   const now = dayjs();
   const givenDate = dayjs(timestamp);
   const startOfToday = now.startOf("day");

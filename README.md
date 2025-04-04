@@ -1,4 +1,4 @@
-# [Dialog.io](https://github.com/youssefezzat304/Dialog.io-realtime-chat)
+# [Plausch](https://github.com/youssefezzat304/Dialog.io-realtime-chat)
 
 A real-time chat application built with Next.js, Node.js, Express, Socket.IO, MongoDB, and TypeScript . This project is primarily developed for **educational purposes**, serving as a hands-on learning experience in building real-time web applications with modern web technologies.
 
@@ -7,7 +7,7 @@ A real-time chat application built with Next.js, Node.js, Express, Socket.IO, Mo
 Clone the Repository
 
 ```bash
-git clone https://github.com/youssefezzat304/Dialog.io.git
+git clone https://github.com/youssefezzat304/Plausch.git
 cd chat-app
 ```
 
@@ -44,14 +44,28 @@ Client
 ```
 // .env
 
-NEXTAUTH_SECRET="<your-secret-key>"
+NEXTAUTH_SECRET="<your-secret-key>" (the same key as in the server environment variables)
 
 NEXTAUTH_URL="<your-auth-url>"
 
 NEXT_PUBLIC_SOCKET_URL="<your-socket-url>"
 ```
 
-Run the app
+#### Run the app
+
+client
+
+```bash
+cd pacakges/client
+pnpm run dev
+```
+
+server
+
+```bash
+cd pacakges/server
+pnpm run dev
+```
 
 ## Features
 
@@ -62,7 +76,7 @@ Run the app
 - 🖼️ **User Profile details**
 - 📡 **WebSockets for Instant Updates**
 - 🤝 **Add and Remove Friends**
-- ✅ **Status Check** (Online/Offline & Custom Status)
+- ✅ **Status Check** (Online/Offline)
 
 ### Upcoming
 
@@ -93,10 +107,10 @@ Run the app
 
 ### Users
 
-| col1    | col2             | col3                 |        |
-| ------- | ---------------- | -------------------- | ------ |
-| `GET`   | `/users/:userId` | Get specific user    | ✅ Yes |
-| `PATCH` | `/users/:userId` | Update specific user | ✅ Yes |
+| Method  | Endpoint         | Description          | Authentication required |
+| ------- | ---------------- | -------------------- | ----------------------- |
+| `GET`   | `/users/:userId` | Get specific user    | ✅ Yes                  |
+| `PATCH` | `/users/:userId` | Update specific user | ✅ Yes                  |
 
 ### Friends
 
@@ -132,9 +146,14 @@ Run the app
 | `"newMessage"`          | new message is received             |
 | `"typing"`              | user is typing a message            |
 | `"onlineFriends"`       | user's friends online status change |
-|                         |                                     |
 
 ## 🖼️ Screenshots
+
+### Landing page (Temporary)
+
+![1743600904054](image/README/1743600904054.png)
+
+more screenshots coming soon...
 
 ## License
 

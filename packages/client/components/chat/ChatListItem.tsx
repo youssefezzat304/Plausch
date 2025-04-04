@@ -29,10 +29,11 @@ const ChatListItem = ({ chat }: { chat: PrivateChat }) => {
         setCurrentChatUser(directChatParticipant);
         window.scrollTo(0, 0);
       }}
-      className="flex justify-between items-center cursor-pointer whitespace-nowrap overflow-x-hidden text-ellipsis h-full w-full max-w-full px-1 py-2 rounded-lg transition-all duration-100 hover:bg-gray-200 active:bg-(--primary-hard) active:scale-98"
+      className="flex justify-between items-center cursor-pointer whitespace-nowrap h-full w-full max-w-full px-1 py-2 rounded-lg transition-all duration-100 hover:bg-gray-200 active:bg-(--primary-hard) active:scale-98"
     >
-      <section className="flex items-center gap-2">
-        <div className="flex items-center relative">
+      {/* Left section - avatar and message */}
+      <section className="flex items-center gap-2 min-w-0 flex-1">
+        <div className="flex items-center relative shrink-0">
           <Avatar className="h-14 w-14 hover:opacity-90 rounded-2xl">
             <AvatarImage
               src="https://github.com/shadcn.png"
@@ -47,19 +48,20 @@ const ChatListItem = ({ chat }: { chat: PrivateChat }) => {
             }`}
           />
         </div>
-
-        <div className="flex flex-col gap-2">
-          <label className="text-md">{directChatParticipant.displayName}</label>
-          <p className="text-sm text-gray-500">
+        <div className="flex flex-col gap-2 min-w-0 flex-1">
+          <label className="text-md truncate">
+            {directChatParticipant.displayName}
+          </label>
+          <p className="text-sm text-gray-500 truncate">
             <span className="text-(--primary-hard)">{isMe && "You: "}</span>
             {lastMessage?.content.text}
           </p>
         </div>
       </section>
 
-      <section className="m-2">
-        <p className="text-xs text-gray-500">
-          {timestamp(lastMessage?.createdAt)}
+      <section className="shrink-0 ml-2">
+        <p className="text-xs text-gray-500 whitespace-nowrap">
+          {timestamp(lastMessage?.createdAt!)}
         </p>
       </section>
     </div>

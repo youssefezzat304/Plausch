@@ -1,15 +1,19 @@
 "use client";
-import { IoNotifications, IoPersonAdd, IoSettingsSharp } from "react-icons/io5";
+import { IoNotifications, IoSettingsSharp } from "react-icons/io5";
 import { RiContactsBook3Fill, RiLogoutCircleLine } from "react-icons/ri";
 import { PiChatsFill } from "react-icons/pi";
 import { FaUserFriends } from "react-icons/fa";
 import Link from "next/link";
 import useTabsStore from "@/stores/tabs.store";
 import ButtonIcon from "../buttons/ButtonIcon";
-import { Avatar } from "./shadcn/avatar";
-import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/shadcn/avatar";
 import AddFriendDialog from "../dialogs/AddFriendDialog";
 import useLogOut from "@/hooks/useLogOut";
+import { toast, Toaster } from "sonner";
 
 const NavBar = () => {
   const setTab = useTabsStore((state) => state.setTab);
@@ -27,7 +31,7 @@ const NavBar = () => {
         </Avatar>
       </Link>
 
-      <div className="flex flex-col gap-4 mt-24">
+      <div className="flex flex-col gap-8 mt-24">
         <ButtonIcon
           side="right"
           tooltip="Notifications"
@@ -39,7 +43,7 @@ const NavBar = () => {
           to="/chat"
           icon={<PiChatsFill className="text-2xl" />}
           onClick={() => {
-            setTab("friends");
+            setTab("chats");
             setTab("contacts", false);
           }}
         />
@@ -50,7 +54,7 @@ const NavBar = () => {
           icon={<RiContactsBook3Fill className="text-2xl" />}
           onClick={() => {
             setTab("contacts");
-            setTab("friends", false);
+            setTab("chats", false);
           }}
         />
         <AddFriendDialog />
@@ -60,6 +64,18 @@ const NavBar = () => {
           icon={<FaUserFriends className="text-2xl" />}
           onClick={() => setTab("friendRequests")}
         />
+        <button
+          title="click"
+          className="bg-primary-soft text-primary-hard px-4 py-2 rounded-lg cursor-pointer text-white"
+          onClick={() =>
+            toast("Event has been created", {
+              description: "Monday, January 3rd at 6:00pm",
+              position: "bottom-center",
+            })
+          }
+        >
+          t
+        </button>
       </div>
 
       <div className="absolute bottom-4 flex flex-col gap-4">

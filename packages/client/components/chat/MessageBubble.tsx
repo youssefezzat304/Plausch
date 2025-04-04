@@ -1,6 +1,10 @@
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/shadcn/avatar";
 import { messageTimestamp } from "@/utils/time";
+import { LuCopy, LuCopyCheck } from "react-icons/lu";
+import { useState } from "react";
+import { toast } from "sonner";
+import ToolTip from "../ui/ToolTip";
 
 interface MessageBubbleProps {
   message?: string;
@@ -24,6 +28,26 @@ const MessageBubble = ({
   className,
 }: MessageBubbleProps) => {
   const isSender = alignment === "right";
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    if (message && type === "text") {
+      try {
+        await navigator.clipboard.writeText(message);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+        toast.success("Copied", {
+          style: {
+            backgroundColor: "var(--primary-hard)",
+            color: "var(--white)",
+            border: "none",
+          },
+        });
+      } catch (err) {
+        toast.error("Failed to copy text");
+      }
+    }
+  };
 
   return (
     <div
@@ -40,7 +64,7 @@ const MessageBubble = ({
         </Avatar>
       )}
 
-      <div className="flex flex-col gap-1">
+      <div className="flex group gap-2">
         {!isSender && senderName && (
           <span className="text-xs text-muted-foreground">{senderName}</span>
         )}
@@ -72,6 +96,30 @@ const MessageBubble = ({
             {isSender && isRead && <span className="text-primary">✓✓</span>}
           </div>
         </div>
+        <ToolTip
+          tooltip="Copy"
+          className="m-1"
+          side={isSender ? "left" : "right"}
+          theme="dark"
+          delayDuration={10}
+        >
+          {copied ? (
+            <LuCopyCheck
+              className={cn(
+                "text-muted-foreground opacity-0 self-center group-hover:opacity-100 transition-opacity duration-200 cursor-pointer active:scale-95",
+                isSender ? "order-first" : "order-last",
+              )}
+            />
+          ) : (
+            <LuCopy
+              onClick={handleCopy}
+              className={cn(
+                "text-muted-foreground opacity-0 self-center group-hover:opacity-100 transition-opacity duration-200 cursor-pointer active:scale-95",
+                isSender ? "order-first" : "order-last",
+              )}
+            />
+          )}
+        </ToolTip>
       </div>
     </div>
   );

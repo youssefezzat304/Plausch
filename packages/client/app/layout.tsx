@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/shadcn/sonner";
 import AuthProvider from "@/providers/AuthProvider";
 import AuthGuard from "@/components/auth/AuthGuard";
 import SocketInitializer from "@/providers/SocketInitializer";
-import { UserInitializer } from "@/providers/UserInitializer";
+import { cn } from "@/lib/utils";
 
 const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
@@ -23,15 +23,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={poppins.className}>
+      <body className={cn(poppins.className, "overflow-hidden")}>
         <SocketInitializer />
 
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <UserInitializer />
             <AuthGuard>{children}</AuthGuard>
           </AuthProvider>
-          <Toaster richColors />
+          <Toaster position="top-center" richColors />
         </QueryClientProvider>
       </body>
     </html>
