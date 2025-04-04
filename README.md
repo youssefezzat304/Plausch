@@ -149,9 +149,27 @@ pnpm run dev
 
 ## 🖼️ Screenshots
 
+This interface incorporates design elements inspired by [Ronas IT | UI/UX Team](https://dribbble.com/shots/23280048-Web-Chat-UI).
+
 ### Landing page (Temporary)
 
-![1743600904054](image/README/1743600904054.png)
+![]()![1743778158143](image/README/1743778158143.gif)
+
+### Login page
+
+![1743778010667](image/README/1743778010667.gif)
+
+## Add Friend
+
+![1743778351695](image/README/1743778351695.gif)
+
+### Copy message and Chat info
+
+![1743778577111](image/README/1743778577111.gif)
+
+### User Profile
+
+![1743778470828](image/README/1743778470828.png)
 
 more screenshots coming soon...
 

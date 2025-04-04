@@ -16,7 +16,7 @@ export function useAddFriend() {
       { email },
       (response: { success: boolean; error?: string }) => {
         if (response && response.success) {
-          toast.info(`Friend request sent to ${email}`);
+          toast.success(`Friend request sent to ${email}`);
         } else {
           toast.error(response?.error || "Failed to send friend request");
         }

@@ -9,6 +9,7 @@ export default function friendsSocketHandler(io: Server, socket: UserSocket) {
 
   socket.on("addFriend", async (data: { email: string }, callback) => {
     try {
+      console.log(data);
       const friendRequest = await friendService.addFriend(userId, data.email);
 
       io.to(`friendRequests:${friendRequest?.recipient._id}`).emit(

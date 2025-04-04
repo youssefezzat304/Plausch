@@ -10,13 +10,15 @@ import ButtonIcon from "../buttons/ButtonIcon";
 import { Button } from "../ui/shadcn/button";
 import { FaCirclePlus } from "react-icons/fa6";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/shadcn/avatar";
-import createGroupAvatar from "@/public/assets/create-group-placeholder.svg";
 import { Textarea } from "../ui/shadcn/textarea";
 import { Input } from "../ui/shadcn/input";
-import { CiSearch } from "react-icons/ci";
 import { ScrollArea } from "../ui/shadcn/scroll-area";
+import useGetContacts from "@/hooks/useGetContacts";
+import AddToGroupListItem from "./AddToGroupListItem";
 
 const CreateGroupDialog = () => {
+  const { data: contacts } = useGetContacts(true);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -51,7 +53,7 @@ const CreateGroupDialog = () => {
               </div>
             </section>
 
-            <section className="flex flex-grow h-96 bg-amber-300">
+            <section className="flex flex-grow h-96">
               <div className="flex-grow rounded-lg px-2 pt-2">
                 <Input
                   title="Search"
@@ -59,10 +61,14 @@ const CreateGroupDialog = () => {
                   placeholder="Search"
                 />
 
-                <ScrollArea className="flex flex-col gap-1 w-full h-full bg-amber-500"></ScrollArea>
+                <ScrollArea className="flex flex-col gap-1 w-full h-full py-2">
+                  {contacts?.map((user) => (
+                    <AddToGroupListItem key={user._id} user={user} />
+                  ))}
+                </ScrollArea>
               </div>
               <div className="p-2 w-[20%]">
-                <div className="w-full bg-amber-200 h-full rounded-lg"></div>
+                <div className="w-full h-full rounded-lg border-2"></div>
               </div>
             </section>
           </DialogHeader>

@@ -4,6 +4,7 @@ import Input from "@/components/forms/Input";
 import SignUpIcon from "@/components/SVG/SignUpIcon";
 import { useSignUpForm } from "@/hooks/useSignupForm";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 function signup() {
   const router = useRouter();
@@ -11,7 +12,12 @@ function signup() {
     useSignUpForm();
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="flex w-full"
+    >
       <div className="pt-9 w-1/2 rounded-xl m-9">
         <SignUpIcon />
       </div>
@@ -83,7 +89,7 @@ function signup() {
           />
         </FormWrapper>
       </div>
-    </>
+    </motion.div>
   );
 }
 

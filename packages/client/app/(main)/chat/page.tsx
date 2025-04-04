@@ -11,6 +11,7 @@ import { ScrollArea } from "@/components/ui/shadcn/scroll-area";
 import ChatInfoPanel from "@/components/chat/ChatInfoPanel";
 import { FaCircle } from "react-icons/fa";
 import { useUserStore } from "@/stores/user.store";
+import { motion, AnimatePresence } from "framer-motion";
 
 function ChatPage() {
   const isFriendRequestsOpen = useTabsStore(
@@ -84,14 +85,25 @@ function ChatPage() {
           <p>Start a conversation</p>
         )}
       </Panel>
-      {(isChatInfoOpen || isFriendRequestsOpen) && (
-        <>
-          <PanelResizeHandle />
-          <Panel defaultSize={25} maxSize={40} minSize={15}>
-            {isChatInfoOpen ? <ChatInfoPanel /> : <FriendRequestsPanel />}
-          </Panel>
-        </>
-      )}
+      <AnimatePresence mode="wait">
+        {(isChatInfoOpen || isFriendRequestsOpen) && (
+          <>
+            <PanelResizeHandle />
+            <Panel defaultSize={25} maxSize={40} minSize={15}>
+              <motion.div
+                key={isChatInfoOpen ? "chatInfo" : "friendRequests"}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 50 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="h-full"
+              >
+                {isChatInfoOpen ? <ChatInfoPanel /> : <FriendRequestsPanel />}
+              </motion.div>
+            </Panel>
+          </>
+        )}
+      </AnimatePresence>
     </PanelGroup>
   );
 }

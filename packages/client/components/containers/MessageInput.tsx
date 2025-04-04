@@ -7,19 +7,28 @@ import { IoMic, IoSendSharp } from "react-icons/io5";
 import ToolTip from "../ui/ToolTip";
 import { useChatForm } from "@/hooks/useChatForm";
 import { useSendMessage } from "@/hooks/useSendMessage";
+import useChatStore from "@/stores/chat.store";
+import { useEffect } from "react";
 
 const MessageInput = () => {
+  const currentChat = useChatStore((state) => state.currentChat);
+
   const { sendMessage } = useSendMessage();
-  const { handleSendMessage, register, watch, isSubmitting } = useChatForm({
-    onSubmit: async (values) => {
-      await sendMessage(values.content);
-    },
-  });
+  const { handleSendMessage, register, watch, isSubmitting, reset } =
+    useChatForm({
+      onSubmit: async (values) => {
+        await sendMessage(values.content);
+      },
+    });
 
   const content = watch("content");
   const sendIconClasses = content?.trim()
     ? "text-(--primary-hard)"
     : "text-(--text-gray)";
+
+  useEffect(() => {
+    reset();
+  }, [currentChat]);
 
   return (
     <form

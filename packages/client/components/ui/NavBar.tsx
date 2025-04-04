@@ -64,8 +64,8 @@ const NavBar = () => {
           icon={<FaUserFriends className="text-2xl" />}
           onClick={() => setTab("friendRequests")}
         />
-        <button
-          title="click"
+        {/* <button
+          title="toaster test"
           className="bg-primary-soft text-primary-hard px-4 py-2 rounded-lg cursor-pointer text-white"
           onClick={() =>
             toast("Event has been created", {
@@ -75,7 +75,7 @@ const NavBar = () => {
           }
         >
           t
-        </button>
+        </button> */}
       </div>
 
       <div className="absolute bottom-4 flex flex-col gap-4">
