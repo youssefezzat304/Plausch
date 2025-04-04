@@ -75,7 +75,7 @@ pnpm run dev
 - 📬 **Real-time Messaging**
 - 🖼️ **User Profile details**
 - 📡 **WebSockets for Instant Updates**
-- 🤝 **Add and Remove Friends**
+- 🤝 **Add Friends**
 - ✅ **Status Check** (Online/Offline)
 
 ### Upcoming
