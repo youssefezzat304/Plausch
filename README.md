@@ -56,14 +56,14 @@ NEXT_PUBLIC_SOCKET_URL="<your-socket-url>"
 client
 
 ```bash
-cd pacakges/client
+cd packges/client
 pnpm run dev
 ```
 
 server
 
 ```bash
-cd pacakges/server
+cd packges/server
 pnpm run dev
 ```
 
