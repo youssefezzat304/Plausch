@@ -8,18 +8,18 @@ Clone the Repository
 
 ```bash
 git clone https://github.com/youssefezzat304/Plausch.git
-cd chat-app
+cd Plausch
 ```
 
 Install Dependencies
 
 ```bash
-cd backend
+cd packges/server
 npm install
 ```
 
 ```bash
-cd client
+cd packages/client
 npm install
 ```
 
@@ -159,7 +159,7 @@ This interface incorporates design elements inspired by [Ronas IT | UI/UX Team](
 
 ![1743778010667](image/README/1743778010667.gif)
 
-## Add Friend
+### Add Friend
 
 ![1743778351695](image/README/1743778351695.gif)
 
